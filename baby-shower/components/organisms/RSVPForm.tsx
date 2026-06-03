@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { RSVP } from '../types';
 import { Icon } from '../atoms/Icon';
 import { Button } from '../atoms/Button';
 import { FormField } from '../moleculs/FormField';
+import { Modal } from '../moleculs/Modal';
 
 interface RSVPFormProps {
   rsvps: RSVP[];
@@ -10,8 +12,24 @@ interface RSVPFormProps {
   onBabyModeChange: (mode: 'happy' | 'sad') => void;
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0 }
+};
+
 export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyModeChange }) => {
   const [showThankYou, setShowThankYou] = useState(false);
+  const [isLookupModalOpen, setIsLookupModalOpen] = useState(false);
   const [lookupResult, setLookupResult] = useState<string | JSX.Element>('');
   const [lookupFirst, setLookupFirst] = useState('');
   const [lookupLast, setLookupLast] = useState('');
@@ -43,7 +61,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
             <p>Guests: {exact.guests}</p>
             <p>Diet: {exact.diet.join(', ') || 'None'}</p>
             <p>Reserved Gift: {exact.reservedGift || 'None'}</p>
-            <button
+            <Button
               onClick={() => {
                 setFormData({
                   firstName: exact.firstName,
@@ -55,11 +73,12 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
                   arrivalTime: exact.arrivalTime || ''
                 });
                 setShowThankYou(false);
+                setIsLookupModalOpen(false);
               }}
-              className="mt-2 rounded-xl bg-gradient-to-br from-coral to-[#f7a07a] py-1 px-3 font-pacifico text-white"
+              className="mt-2 w-full !py-1 !font-pacifico"
             >
               Edit My RSVP
-            </button>
+            </Button>
           </div>
         );
         return;
@@ -95,7 +114,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
 
   if (showThankYou) {
     return (
-      <div className="px-6 pb-[30px] pt-[42px] text-center">
+      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="px-6 pb-[30px] pt-[42px] text-center">
         <div className="mb-4 flex items-center justify-center gap-2.5 text-ocean drop-shadow-[0_5px_10px_rgba(0,119,182,.18)]" aria-hidden="true">
           <Icon name="shell" className="h-[46px] w-[46px] fill-none stroke-current stroke-2" />
           <Icon name="wave" className="h-[46px] w-[46px] fill-none stroke-current stroke-2" />
@@ -103,44 +122,56 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
         </div>
         <h2 className="mb-2.5 font-pacifico text-[1.8rem] text-ocean">See you at the beach!</h2>
         <p className="text-base font-bold leading-relaxed text-deep">Thanks so much for your RSVP. We cannot wait to celebrate this July baby boy with you.</p>
-        <button onClick={() => setShowThankYou(false)} className="mt-6 text-ocean font-bold underline">
+        <button onClick={() => setShowThankYou(false)} className="mt-6 text-ocean font-bold underline cursor-pointer">
           Send another RSVP
         </button>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div>
-      <div className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
-        <div className="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean">
-          <Icon name="flower" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" />
-          Find Your RSVP
+    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+      <motion.div variants={itemVariants} className="mb-5 flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="text-center sm:text-left">
+          <h2 className="font-pacifico text-[clamp(1.65rem,5vw,2.3rem)] leading-tight text-ocean">Kindly RSVP</h2>
+          <p className="max-w-[420px] font-bold leading-normal text-[#315566]">Please let us know if you can make it to our beachy July celebration.</p>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <input 
-            type="text" 
+        <Button variant="seafoam" onClick={() => setIsLookupModalOpen(true)} className="whitespace-nowrap shadow-soft">
+          Find My RSVP
+        </Button>
+      </motion.div>
+
+      <Modal 
+        isOpen={isLookupModalOpen} 
+        onClose={() => setIsLookupModalOpen(false)} 
+        title="Find Your RSVP"
+      >
+        <div className="grid gap-3">
+          <FormField 
+            label="First Name" id="lookupFirst" placeholder="e.g. Alice"
             value={lookupFirst}
             onChange={(e) => setLookupFirst(e.target.value)}
-            placeholder="First Name" 
-            className="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep outline-none focus:border-ocean"
           />
-          <input 
-            type="text" 
+          <FormField 
+            label="Last Name" id="lookupLast" placeholder="optional"
             value={lookupLast}
             onChange={(e) => setLookupLast(e.target.value)}
-            placeholder="Last Name (optional)" 
-            className="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep outline-none focus:border-ocean"
           />
+          <Button onClick={handleLookup} className="mt-2 w-full !font-pacifico">
+            Lookup RSVP
+          </Button>
+          <AnimatePresence>
+            {lookupResult && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mt-2 rounded-xl border border-ocean/10 bg-seafoam/30 p-3 text-sm text-deep overflow-hidden">
+                {lookupResult}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-        <Button onClick={handleLookup} className="mt-3 w-full !py-2 !font-pacifico">
-          Lookup RSVP
-        </Button>
-        {lookupResult && <div className="mt-2 text-sm text-deep">{lookupResult}</div>}
-      </div>
+      </Modal>
 
       <form onSubmit={handleSubmit}>
-        <div className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
+        <motion.div variants={itemVariants} className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
           <div className="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean">
             <Icon name="flower" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" /> 
             Your Info
@@ -155,15 +186,15 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
             value={formData.lastName}
             onChange={(e) => setFormData({...formData, lastName: e.target.value})}
           />
-        </div>
+        </motion.div>
 
-        <div className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
+        <motion.div variants={itemVariants} className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
           <div className="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean">
             <Icon name="party" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" /> 
             Will you be joining us?
           </div>
           <div className="mb-3 grid gap-2.5">
-            <label className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px ${formData.attending === 'yes' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}>
+            <label className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.attending === 'yes' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}>
               <input 
                 className="h-[18px] w-[18px] accent-ocean" type="radio" name="attending" value="yes" 
                 checked={formData.attending === 'yes'}
@@ -174,7 +205,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
               />
               Yes, I&apos;ll be there!
             </label>
-            <label className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px ${formData.attending === 'no' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}>
+            <label className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.attending === 'no' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}>
               <input 
                 className="h-[18px] w-[18px] accent-ocean" type="radio" name="attending" value="no"
                 checked={formData.attending === 'no'}
@@ -196,16 +227,16 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
             value={formData.arrivalTime}
             onChange={(e) => setFormData({...formData, arrivalTime: e.target.value})}
           />
-        </div>
+        </motion.div>
 
-        <div className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
+        <motion.div variants={itemVariants} className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
           <div className="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean">
             <Icon name="watermelon" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" /> 
             Dietary Restrictions
           </div>
           <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
             {['vegetarian', 'vegan', 'gluten-free', 'nut-allergy', 'dairy-free', 'halal', 'kosher'].map((diet) => (
-              <label key={diet} className={`flex cursor-pointer items-center gap-2 rounded-[10px] border-2 px-3 py-2 text-sm font-extrabold shadow-soft transition hover:-translate-y-px ${formData.diet.includes(diet) ? 'border-coral bg-[#fff0eb]' : 'border-[#b8e8f5] bg-white'}`}>
+              <label key={diet} className={`flex cursor-pointer items-center gap-2 rounded-[10px] border-2 px-3 py-2 text-sm font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.diet.includes(diet) ? 'border-coral bg-[#fff0eb]' : 'border-[#b8e8f5] bg-white'}`}>
                 <input 
                   className="h-4 w-4 accent-coral" type="checkbox" checked={formData.diet.includes(diet)}
                   onChange={(e) => {
@@ -222,12 +253,14 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
             value={formData.otherDiet}
             onChange={(e) => setFormData({...formData, otherDiet: e.target.value})}
           />
-        </div>
+        </motion.div>
 
-        <Button type="submit" className="w-full !p-4 !font-pacifico !text-[1.15rem]">
-          Send my RSVP <Icon name="wave" className="ml-1.5 inline h-[22px] w-[22px] align-[-4px] fill-none stroke-current stroke-[2.4]" />
-        </Button>
+        <motion.div variants={itemVariants}>
+          <Button type="submit" className="w-full !p-4 !font-pacifico !text-[1.15rem]">
+            Send my RSVP <Icon name="wave" className="ml-1.5 inline h-[22px] w-[22px] align-[-4px] fill-none stroke-current stroke-[2.4]" />
+          </Button>
+        </motion.div>
       </form>
-    </div>
+    </motion.div>
   );
 };

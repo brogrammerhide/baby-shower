@@ -67,7 +67,7 @@ export default function Home() {
     <BaseLayout>
       <PageTemplate
         sidebar={
-          <div className="lg:sticky lg:top-[22px] grid gap-[22px]">
+          <div className="lg:sticky lg:top-0 grid gap-[22px]">
             <Sidebar details={details} />
             <div className="overflow-hidden rounded-[28px] bg-white/90 shadow-card backdrop-blur-lg">
               <BabyAnimation mode={babyMode} />

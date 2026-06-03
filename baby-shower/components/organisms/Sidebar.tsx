@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Details } from '../types';
 import { InfoRow } from '../moleculs/InfoRow';
 import { Icon } from '../atoms/Icon';
@@ -9,6 +10,22 @@ interface SidebarProps {
   isEditPage?: boolean;
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: { opacity: 1, x: 0 }
+};
+
 export const Sidebar: React.FC<SidebarProps> = ({ details, isEditPage = false }) => {
   const copyAddress = () => {
     navigator.clipboard.writeText(details.place);
@@ -16,7 +33,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ details, isEditPage = false })
   };
 
   return (
-    <section className="overflow-hidden rounded-[28px] bg-white/90 shadow-card backdrop-blur-lg lg:sticky lg:top-[22px]" aria-label="Baby shower details">
+    <section className="overflow-hidden rounded-[28px] bg-white/90 shadow-card backdrop-blur-lg" aria-label="Baby shower details">
       <div className="relative bg-gradient-to-br from-ocean to-[#48cae4] px-[18px] pb-[42px] pt-[34px] text-center shadow-[inset_0_4px_20px_rgba(0,119,182,.3)] after:absolute after:bottom-[-1px] after:left-0 after:h-[30px] after:w-full after:bg-white/90 after:[clip-path:ellipse(55%_100%_at_50%_100%)] sm:px-7">
         {!isEditPage && (
           <Link href="/edit" className="absolute top-3.5 right-3.5 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-[#eefcff] backdrop-blur-md transition hover:bg-white hover:text-ocean shadow-soft animate-pulse" title="Edit Registry & Details">
@@ -36,11 +53,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ details, isEditPage = false })
         <p className="text-base font-extrabold leading-normal text-[#eefcff]">Celebrating our little summer boy, arriving in July.</p>
       </div>
 
-      <div className="grid gap-3.5 px-7 pb-[30px] pt-4">
-        <InfoRow icon="calendar" label="Date" value={details.date} />
-        <InfoRow icon="umbrella" label="Theme" value={details.theme} />
-        <InfoRow icon="pin" label="Place" value={details.place} onClick={copyAddress} title="Click to copy address" />
-      </div>
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid gap-3.5 px-7 pb-[30px] pt-4"
+      >
+        <motion.div variants={itemVariants}><InfoRow icon="calendar" label="Date" value={details.date} /></motion.div>
+        <motion.div variants={itemVariants}><InfoRow icon="umbrella" label="Theme" value={details.theme} /></motion.div>
+        <motion.div variants={itemVariants}><InfoRow icon="pin" label="Place" value={details.place} onClick={copyAddress} title="Click to copy address" /></motion.div>
+      </motion.div>
     </section>
   );
 };

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Script from 'next/script';
+import { motion } from 'framer-motion';
 import { Floater } from '../types';
 import { BackgroundFloater } from '../atoms/BackgroundFloater';
 
@@ -47,9 +48,14 @@ export const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
         </svg>
       </div>
 
-      <div className="relative z-10">
+      <motion.div 
+        className="relative z-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         {children}
-      </div>
+      </motion.div>
     </div>
   );
 };

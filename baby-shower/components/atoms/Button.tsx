@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'coral' | 'seafoam' | 'mint' | 'transparent';
@@ -11,7 +12,7 @@ export const Button: React.FC<ButtonProps> = ({
   children, 
   ...props 
 }) => {
-  const baseStyles = 'transition hover:-translate-y-px active:translate-y-0.5 font-black px-4 py-2 rounded-xl';
+  const baseStyles = 'transition-colors active:translate-y-0.5 font-black px-4 py-2 rounded-xl cursor-pointer';
   
   const variants = {
     coral: 'bg-gradient-to-br from-coral to-[#f7a07a] text-white shadow-coral-button hover:shadow-coral-button-hover active:shadow-coral-button-active',
@@ -21,11 +22,13 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button 
+    <motion.button 
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
       className={`${baseStyles} ${variants[variant]} ${className}`} 
-      {...props}
+      {...(props as React.ComponentPropsWithoutRef<typeof motion.button>)}
     >
       {children}
-    </button>
+    </motion.button>
   );
 };
