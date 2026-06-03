@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ocean: #0077b6;
+  --color-deep: #1a3a4a;
+  --color-sky: #90e0ef;
+  --color-sand: #fde8c8;
+  --color-seafoam: #caf0f8;
+  --color-coral: #f4845f;
+  --color-sun: #ffd166;
+
+  --font-nunito: "Nunito", sans-serif;
+  --font-pacifico: "Pacifico", cursive;
+
+  --shadow-card: 0 2px 0 rgba(255, 255, 255, 0.9) inset, 0 -2px 0 rgba(0, 0, 0, 0.04) inset, 0 20px 60px rgba(0, 119, 182, 0.18), 0 6px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-soft: 0 4px 14px rgba(0, 119, 182, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-coral-button: 0 6px 0 #c9603a, 0 8px 20px rgba(244, 132, 95, 0.35);
+  --shadow-coral-button-hover: 0 8px 0 #c9603a, 0 12px 24px rgba(244, 132, 95, 0.4);
+  --shadow-coral-button-active: 0 2px 0 #c9603a, 0 4px 12px rgba(244, 132, 95, 0.25);
+  --shadow-mint-button: 0 4px 0 #48a78c, 0 7px 15px rgba(72, 167, 140, 0.22);
+
+  @keyframes wave {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes float-up {
+    0% { transform: translateY(110vh) rotate(0deg); opacity: 0.2; }
+    100% { transform: translateY(-12vh) rotate(360deg); opacity: 0; }
+  }
+  @keyframes pop-in {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  --animate-wave: wave 6s linear infinite;
+  --animate-wave-slow: wave 9s linear infinite reverse;
+  --animate-float-up: float-up linear infinite;
+  --animate-pop-in: pop-in 0.3s ease;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
