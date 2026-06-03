@@ -98,6 +98,12 @@
   <main class="relative z-10 mx-auto grid w-full max-w-[1040px] grid-cols-1 items-start gap-[22px] lg:grid-cols-[minmax(310px,.88fr)_minmax(0,1.12fr)]">
     <section class="overflow-hidden rounded-[28px] bg-white/90 shadow-card backdrop-blur-lg lg:sticky lg:top-[22px]" aria-label="Baby shower details">
       <div class="relative bg-gradient-to-br from-ocean to-[#48cae4] px-[18px] pb-[42px] pt-[34px] text-center shadow-[inset_0_4px_20px_rgba(0,119,182,.3)] after:absolute after:bottom-[-1px] after:left-0 after:h-[30px] after:w-full after:bg-white/90 after:[clip-path:ellipse(55%_100%_at_50%_100%)] sm:px-7">
+        <a href="edit.html" class="absolute top-3.5 right-3.5 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-[#eefcff] backdrop-blur-md transition hover:bg-white hover:text-ocean shadow-soft animate-pulse" title="Edit Registry & Details">
+          <svg class="h-5 w-5 fill-none stroke-current stroke-[2.2]" viewBox="0 0 24 24">
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+          </svg>
+        </a>
         <span class="mb-2.5 flex items-center justify-center gap-2.5 text-[#eefcff] drop-shadow-[0_2px_5px_rgba(0,0,0,.16)]" aria-hidden="true">
           <svg class="h-[34px] w-[34px] fill-none stroke-current stroke-2"><use href="#icon-wave"></use></svg>
           <svg class="h-[34px] w-[34px] fill-none stroke-current stroke-2"><use href="#icon-shell"></use></svg>
@@ -124,15 +130,15 @@
       <div class="grid gap-3.5 px-7 pb-[30px] pt-2">
         <div class="grid grid-cols-[42px_1fr] items-center gap-3 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] p-[13px] shadow-soft">
           <span class="grid h-[42px] w-[42px] place-items-center rounded-[14px] bg-white shadow-[0_2px_7px_rgba(0,0,0,.06)]" aria-hidden="true"><svg class="h-[23px] w-[23px] fill-none stroke-ocean stroke-2"><use href="#icon-calendar"></use></svg></span>
-          <div><strong class="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">Date</strong><span class="block font-extrabold leading-snug">Sunday, July 13 at 12:30 PM</span></div>
+          <div><strong class="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">Date</strong><span class="block font-extrabold leading-snug" id="displayDate">Sunday, July 13 at 12:30 PM</span></div>
         </div>
         <div class="grid grid-cols-[42px_1fr] items-center gap-3 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] p-[13px] shadow-soft">
           <span class="grid h-[42px] w-[42px] place-items-center rounded-[14px] bg-white shadow-[0_2px_7px_rgba(0,0,0,.06)]" aria-hidden="true"><svg class="h-[23px] w-[23px] fill-none stroke-ocean stroke-2"><use href="#icon-umbrella"></use></svg></span>
-          <div><strong class="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">Theme</strong><span class="block font-extrabold leading-snug">Summer beach, seafoam blues, coral, and sunshine</span></div>
+          <div><strong class="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">Theme</strong><span class="block font-extrabold leading-snug" id="displayTheme">Summer beach, seafoam blues, coral, and sunshine</span></div>
         </div>
         <div class="grid grid-cols-[42px_1fr] items-center gap-3 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] p-[13px] shadow-soft">
           <span class="grid h-[42px] w-[42px] place-items-center rounded-[14px] bg-white shadow-[0_2px_7px_rgba(0,0,0,.06)]" aria-hidden="true"><svg class="h-[23px] w-[23px] fill-none stroke-ocean stroke-2"><use href="#icon-pin"></use></svg></span>
-          <div><strong class="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">Place</strong><span class="block font-extrabold leading-snug">Add your shower address here</span></div>
+          <div><strong class="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">Place</strong><span class="block font-extrabold leading-snug" id="displayPlace">570 Wilson Avenue, Toronto, ON</span></div>
         </div>
       </div>
     </section>
@@ -142,17 +148,29 @@
       <div class="mb-8">
         <div class="mb-[18px] grid items-start gap-[18px] sm:flex sm:items-end sm:justify-between">
           <h2 class="font-pacifico text-[clamp(1.65rem,5vw,2.3rem)] leading-tight text-ocean">Kindly RSVP</h2>
-          <p class="max-w-[420px] font-bold leading-normal text-[#315566]">Please let us know if you can make it to our beachy July celebration.</p>
+<p class="max-w-[420px] font-bold leading-normal text-[#315566]">Please let us know if you can make it to our beachy July celebration.</p>
+<div class="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
+  <div class="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean">
+    <svg class="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" aria-hidden="true"><use href="#icon-flower"/></svg>
+    Find Your RSVP
+  </div>
+  <div class="grid grid-cols-2 gap-3">
+    <input type="text" id="lookupFirst" placeholder="First Name" class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep"/>
+    <input type="text" id="lookupLast" placeholder="Last Name (optional)" class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep"/>
+  </div>
+  <button id="lookupBtn" class="mt-3 w-full rounded-xl bg-gradient-to-br from-coral to-[#f7a07a] py-2 font-pacifico text-white">Lookup RSVP</button>
+  <div id="lookupResult" class="mt-2 text-sm text-deep"></div>
+</div>
         </div>
 
         <div class="px-0 sm:px-0">
           <form id="rsvpForm">
             <div class="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
               <div class="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean"><svg class="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" aria-hidden="true"><use href="#icon-flower"></use></svg> Your Info</div>
-              <label class="mb-1.5 block text-sm font-extrabold text-deep" for="name">Your Full Name</label>
-              <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" type="text" id="name" name="name" placeholder="e.g. Alice Smith" required>
-              <label class="mb-1.5 mt-3 block text-sm font-extrabold text-deep" for="email">Email Address</label>
-              <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" type="email" id="email" name="email" placeholder="e.g. alice@email.com">
+              <label class="mb-1.5 block text-sm font-extrabold text-deep" for="firstName">First Name</label>
+<input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" type="text" id="firstName" name="firstName" placeholder="e.g. Alice" required>
+<label class="mt-2 block text-sm font-extrabold text-deep" for="lastName">Last Name</label>
+<input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" type="text" id="lastName" name="lastName" placeholder="e.g. Smith" required>
             </div>
 
             <div class="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
@@ -169,15 +187,17 @@
               </div>
               <label class="mb-1.5 block text-sm font-extrabold text-deep" for="guests">Number of guests, including yourself</label>
               <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" type="number" id="guests" name="guests" min="1" max="10" value="1">
+    <label class="mt-2 block text-sm font-extrabold text-deep" for="arrivalTime">Around what time are you planning to arrive?</label>
+    <input type="time" id="arrivalTime" name="arrivalTime" class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" required>
             </div>
 
             <div class="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
               <div class="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean"><svg class="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" aria-hidden="true"><use href="#icon-watermelon"></use></svg> Dietary Restrictions</div>
               <div class="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="vegetarian"> Vegetarian</label>
+                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="vegetarian"> 🌱 Vegetarian</label>
                 <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="vegan"> Vegan</label>
                 <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="gluten-free"> Gluten-Free</label>
-                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="nut-allergy"> Nut Allergy</label>
+                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="nut-allergy"> 🌰 Nut Allergy</label>
                 <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="dairy-free"> Dairy-Free</label>
                 <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="halal"> Halal</label>
                 <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="kosher"> Kosher</label>
@@ -267,23 +287,56 @@
       floaterContainer.appendChild(el);
     }
 
-    const gifts = [
-      { name: 'Wave-Soft Swaddle Set', category: 'nursery', price: '$32', icon: 'wave', note: 'Light cotton muslin for warm July naps and stroller walks.' },
-      { name: 'Sea Glass Sound Machine', category: 'nursery', price: '$48', icon: 'moon', note: 'Ocean sounds and soft light for bedtime.' },
-      { name: 'Palm Shade Stroller Fan', category: 'beach', price: '$29', icon: 'palm', note: 'Rechargeable fan for sunny walks and beach days.' },
-      { name: 'Baby Beach Tent', category: 'beach', price: '$76', icon: 'tent', note: 'Portable shade for picnics, shore days, and backyard lounging.' },
-      { name: 'Bottle Warmer', category: 'feeding', price: '$41', icon: 'bottle', note: 'Compact warmer for nighttime bottles and early mornings.' },
-      { name: 'Ocean Bib Bundle', category: 'feeding', price: '$22', icon: 'bib', note: 'Soft waterproof bibs in shell, wave, and sailboat prints.' },
-      { name: 'Newborn Diaper Caddy', category: 'care', price: '$35', icon: 'caddy', note: 'Keeps wipes, diapers, cream, and tiny socks in one place.' },
-      { name: 'Gentle Bath Kit', category: 'care', price: '$44', icon: 'bath', note: 'Wash, lotion, hooded towel, and brush for first baths.' },
-      { name: 'Sandy Toes Play Mat', category: 'nursery', price: '$58', icon: 'star', note: 'Padded coastal-color mat for tummy time.' },
-      { name: 'UPF Swim Romper', category: 'beach', price: '$26', icon: 'shirt', note: 'Sun-safe baby swim layer for future splash days.' },
-      { name: 'Burp Cloth Stack', category: 'feeding', price: '$18', icon: 'cloth', note: 'Absorbent everyday cloths in breezy blue and white.' },
-      { name: 'Mini First Aid Pouch', category: 'care', price: '$24', icon: 'firstaid', note: 'Thermometer, nail file, medicine pacifier, and travel pouch.' }
+    const DEFAULT_DETAILS = {
+      date: 'Sunday, July 13 from 12:00 to 16:00',
+      theme: 'Summer beach, seafoam blues, coral, and sunshine',
+      place: '570 Wilson Avenue, Toronto, ON'
+    };
+
+    const DEFAULT_GIFTS = [
+      { name: 'Wave-Soft Swaddle Set', category: 'nursery', price: '$32', icon: 'wave', note: 'Light cotton muslin for warm July naps and stroller walks.', reserved: false },
+      { name: 'Sea Glass Sound Machine', category: 'nursery', price: '$48', icon: 'moon', note: 'Ocean sounds and soft light for bedtime.', reserved: false },
+      { name: 'Palm Shade Stroller Fan', category: 'beach', price: '$29', icon: 'palm', note: 'Rechargeable fan for sunny walks and beach days.', reserved: false },
+      { name: 'Baby Beach Tent', category: 'beach', price: '$76', icon: 'tent', note: 'Portable shade for picnics, shore days, and backyard lounging.', reserved: false },
+      { name: 'Bottle Warmer', category: 'feeding', price: '$41', icon: 'bottle', note: 'Compact warmer for nighttime bottles and early mornings.', reserved: false },
+      { name: 'Ocean Bib Bundle', category: 'feeding', price: '$22', icon: 'bib', note: 'Soft waterproof bibs in shell, wave, and sailboat prints.', reserved: false },
+      { name: 'Newborn Diaper Caddy', category: 'care', price: '$35', icon: 'caddy', note: 'Keeps wipes, diapers, cream, and tiny socks in one place.', reserved: false },
+      { name: 'Gentle Bath Kit', category: 'care', price: '$44', icon: 'bath', note: 'Wash, lotion, hooded towel, and brush for first baths.', reserved: false },
+      { name: 'Sandy Toes Play Mat', category: 'nursery', price: '$58', icon: 'star', note: 'Padded coastal-color mat for tummy time.', reserved: false },
+      { name: 'UPF Swim Romper', category: 'beach', price: '$26', icon: 'shirt', note: 'Sun-safe baby swim layer for future splash days.', reserved: false },
+      { name: 'Burp Cloth Stack', category: 'feeding', price: '$18', icon: 'cloth', note: 'Absorbent everyday cloths in breezy blue and white.', reserved: false },
+      { name: 'Mini First Aid Pouch', category: 'care', price: '$24', icon: 'firstaid', note: 'Thermometer, nail file, medicine pacifier, and travel pouch.', reserved: false }
     ];
 
-    const reserved = new Set();
+    // Load data from localStorage or fallback to defaults
+    const details = JSON.parse(localStorage.getItem('baby_shower_details')) || DEFAULT_DETAILS;
+    document.getElementById('displayDate').textContent = details.date;
+document.getElementById('displayTheme').textContent = details.theme;
+const placeEl = document.getElementById('displayPlace');
+placeEl.textContent = details.place;
+placeEl.style.cursor = 'pointer';
+placeEl.title = 'Click to copy address';
+placeEl.addEventListener('click', () => {
+  navigator.clipboard.writeText(details.place).then(() => {
+    const original = placeEl.textContent;
+    placeEl.textContent = 'Copied!';
+    setTimeout(() => { placeEl.textContent = original; }, 1500);
+  });
+});
+    document.getElementById('displayTheme').textContent = details.theme;
+    document.getElementById('displayPlace').textContent = details.place;
+
+    let gifts = JSON.parse(localStorage.getItem('baby_shower_gifts')) || DEFAULT_GIFTS;
+
+    // Initialize RSVP data
+    const DEFAULT_RSVPS = [
+      { firstName: 'Alice', lastName: 'Smith', attending: true, guests: 2, diet: ['vegetarian'], note: '', reservedGift: 'Wave-Soft Swaddle Set' },
+      { firstName: 'Bob', lastName: 'Johnson', attending: false, guests: 0, diet: [], note: '', reservedGift: '' }
+    ];
+    let rsvps = JSON.parse(localStorage.getItem('baby_shower_rsvps')) || DEFAULT_RSVPS;
+    localStorage.setItem('baby_shower_rsvps', JSON.stringify(rsvps));
     let activeFilter = 'all';
+
     const giftGrid = document.getElementById('giftGrid');
     const emptyState = document.getElementById('emptyState');
     const searchInput = document.getElementById('searchInput');
@@ -291,7 +344,7 @@
     const reservedItems = document.getElementById('reservedItems');
 
     function giftCard(gift, index) {
-      const isReserved = reserved.has(index);
+      const isReserved = gift.reserved;
       const buttonClass = isReserved
         ? 'reserve-btn min-h-[38px] whitespace-nowrap rounded-[13px] border-0 bg-gradient-to-br from-[#6ed6b5] to-[#9ae8d1] px-3 font-black text-white shadow-mintButton transition hover:-translate-y-px'
         : 'reserve-btn min-h-[38px] whitespace-nowrap rounded-[13px] border-0 bg-gradient-to-br from-coral to-[#f7a07a] px-3 font-black text-white shadow-[0_4px_0_#c9603a,0_7px_15px_rgba(244,132,95,.24)] transition hover:-translate-y-px hover:shadow-[0_5px_0_#c9603a,0_10px_18px_rgba(244,132,95,.3)]';
@@ -316,6 +369,41 @@
       `;
     }
 
+        // RSVP lookup logic
+    function lookupRSVP() {
+      const fn = document.getElementById('lookupFirst').value.trim().toLowerCase();
+      const ln = document.getElementById('lookupLast').value.trim().toLowerCase();
+      const resultDiv = document.getElementById('lookupResult');
+      if (!fn) { resultDiv.textContent = 'Please enter first name.'; return; }
+      if (ln) {
+        const exact = rsvps.find(r => r.firstName.toLowerCase() === fn && r.lastName.toLowerCase() === ln);
+        if (exact) {
+          resultDiv.innerHTML = `<p class="text-ocean">Found invitation for ${exact.firstName} ${exact.lastName}.</p>
+            <p>Attending: ${exact.attending ? 'Yes' : 'No'}</p>
+            <p>Guests: ${exact.guests}</p>
+            <p>Diet: ${exact.diet.join(', ') || 'None'}</p>
+            <p>Reserved Gift: ${exact.reservedGift || 'None'}</p>
+            <button id="editRsvpBtn" class="mt-2 rounded-xl bg-gradient-to-br from-coral to-[#f7a07a] py-1 px-3 font-pacifico text-white">Edit My RSVP</button>`;
+          document.getElementById('editRsvpBtn').addEventListener('click', () => {
+            document.getElementById('firstName').value = exact.firstName;
+document.getElementById('lastName').value = exact.lastName;
+            document.getElementById('rsvpForm').classList.remove('hidden');
+            document.getElementById('thankyou').classList.add('hidden');
+          });
+          return;
+        }
+      }
+      const firstMatches = rsvps.filter(r => r.firstName.toLowerCase() === fn);
+      if (firstMatches.length > 0) {
+        const names = firstMatches.map(r => `${r.firstName} ${r.lastName}`).join(', ');
+        resultDiv.innerHTML = `<p class="text-deep">We found the following: ${names}. Is that you?</p>`;
+        return;
+      }
+      resultDiv.innerHTML = `<p class="text-red-600">Invitation not found. Please contact the organizer.</p>`;
+    }
+    document.getElementById('lookupBtn').addEventListener('click', lookupRSVP);
+
+    // Existing renderGifts function
     function renderGifts() {
       const term = searchInput.value.trim().toLowerCase();
       const visible = gifts
@@ -327,7 +415,7 @@
       giftGrid.appendChild(emptyState);
       emptyState.classList.toggle('hidden', visible.length !== 0);
       totalItems.textContent = gifts.length;
-      reservedItems.textContent = reserved.size;
+      reservedItems.textContent = gifts.filter(g => g.reserved).length;
     }
 
     document.querySelectorAll('.filter-btn').forEach((button) => {
@@ -346,11 +434,8 @@
       const button = event.target.closest('.reserve-btn');
       if (!button) return;
       const index = Number(button.dataset.index);
-      if (reserved.has(index)) {
-        reserved.delete(index);
-      } else {
-        reserved.add(index);
-      }
+      gifts[index].reserved = !gifts[index].reserved;
+      localStorage.setItem('baby_shower_gifts', JSON.stringify(gifts));
       renderGifts();
     });
 
@@ -395,7 +480,7 @@
         player.play();
         label.textContent = 'Aww... baby will miss you!';
         label.className = 'min-h-7 text-center font-pacifico text-base text-[#e63946]';
-        bubble.textContent = 'Nooo, please come!';
+        bubble.textContent = 'We will see each other soon!!';
         bubble.classList.remove('hidden');
         bubble.classList.add('block', 'bg-[#ffe0e0]', 'text-[#b91c1c]');
       } else {
@@ -410,12 +495,57 @@
     document.getElementById('attendNo').addEventListener('change', () => setBaby('sad'));
 
     document.getElementById('rsvpForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      this.classList.add('hidden');
-      document.getElementById('thankyou').classList.remove('hidden');
-      setBaby('happy');
-    });
+  event.preventDefault();
+  // Gather form data
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const attending = document.getElementById('attendYes').checked;
+  const guests = parseInt(document.getElementById('guests').value, 10) || 1;
+  const diet = Array.from(document.querySelectorAll('input[name="diet"]:checked')).map(el => el.value);
+  const otherDiet = document.getElementById('otherDiet').value.trim();
+  if (otherDiet) diet.push(otherDiet);
+  const arrivalTime = document.getElementById('arrivalTime').value;
+  const newRsvp = {firstName, lastName, attending, guests, diet, arrivalTime};
+  rsvps.push(newRsvp);
+  localStorage.setItem('baby_shower_rsvps', JSON.stringify(rsvps));
+  renderGuestList();
+  this.classList.add('hidden');
+  document.getElementById('thankyou').classList.remove('hidden');
+  setBaby('happy');
+});
 
+    // Render Guest List in admin page
+    function renderGuestList() {
+      const container = document.getElementById('guestListContainer');
+      if (!rsvps || rsvps.length === 0) {
+        container.innerHTML = `<div class="p-4 text-center text-sm text-[#497184] bg-white/50 rounded">No RSVPs yet.</div>`;
+        return;
+      }
+      container.innerHTML = rsvps.map((r, i) => {
+        const diet = r.diet && r.diet.length ? r.diet.join(', ') : 'None';
+        const reserved = r.reservedGift || 'None';
+        return `<div class="flex items-center justify-between p-3 bg-white rounded-xl shadow-soft border border-ocean/10">
+          <div>
+            <p class="font-extrabold text-deep">${r.firstName} ${r.lastName}</p>
+            <p class="text-xs text-[#497184]">Attending: ${r.attending ? 'Yes' : 'No'}, Guests: ${r.guests}, Diet: ${diet}, Gift: ${reserved}</p>
+          </div>
+          <button onclick="deleteGuest(${i})" class="p-1 rounded bg-[#ffe0e0] hover:bg-[#ffe0e0] hover:text-[#b91c1c] text-[#b91c1c]">✕</button>
+        </div>`;
+      }).join('');
+    }
+
+    window.deleteGuest = function(index) {
+      if (confirm(`Delete RSVP for ${rsvps[index].firstName} ${rsvps[index].lastName}?`)) {
+        rsvps.splice(index, 1);
+        localStorage.setItem('baby_shower_rsvps', JSON.stringify(rsvps));
+        renderGuestList();
+        renderRegistryList();
+      }
+    };
+
+    // Initial render calls
+    renderRegistryList();
+    renderGuestList();
     renderGifts();
   </script>
 </body>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Registry & Shower Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ocean: '#0077b6',
+            deep: '#1a3a4a',
+            sky: '#90e0ef',
+            sand: '#fde8c8',
+            seafoam: '#caf0f8',
+            coral: '#f4845f',
+            sun: '#ffd166'
+          },
+          fontFamily: {
+            nunito: ['Nunito', 'sans-serif'],
+            pacifico: ['Pacifico', 'cursive']
+          },
+          boxShadow: {
+            card: '0 2px 0 rgba(255,255,255,.9) inset, 0 -2px 0 rgba(0,0,0,.04) inset, 0 20px 60px rgba(0,119,182,.18), 0 6px 20px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.05)',
+            soft: '0 4px 14px rgba(0,119,182,.07), 0 1px 3px rgba(0,0,0,.04)',
+            coralButton: '0 6px 0 #c9603a, 0 8px 20px rgba(244,132,95,.35)',
+            coralButtonHover: '0 8px 0 #c9603a, 0 12px 24px rgba(244,132,95,.4)',
+            coralButtonActive: '0 2px 0 #c9603a, 0 4px 12px rgba(244,132,95,.25)',
+            mintButton: '0 4px 0 #48a78c, 0 7px 15px rgba(72,167,140,.22)'
+          },
+          keyframes: {
+            wave: {
+              '0%': { transform: 'translateX(0)' },
+              '100%': { transform: 'translateX(-50%)' }
+            },
+            floatUp: {
+              '0%': { transform: 'translateY(110vh) rotate(0deg)', opacity: '.2' },
+              '100%': { transform: 'translateY(-12vh) rotate(360deg)', opacity: '0' }
+            }
+          },
+          animation: {
+            wave: 'wave 6s linear infinite',
+            waveSlow: 'wave 9s linear infinite reverse',
+            floatUp: 'floatUp linear infinite'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="relative min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_16%_10%,rgba(255,209,102,.55),transparent_260px),radial-gradient(circle_at_86%_18%,rgba(110,214,181,.35),transparent_300px),linear-gradient(180deg,#b8f0ff_0%,#e0f7fa_42%,#fde8c8_100%)] px-3 py-[18px] pb-[108px] font-nunito text-deep sm:px-4 sm:py-[30px] sm:pb-28">
+  
+  <svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="icon-wave" viewBox="0 0 24 24"><path d="M3 15c2.8-2.4 5.6-2.4 8.4 0s5.6 2.4 8.4 0"/><path d="M3 19c2.8-2.4 5.6-2.4 8.4 0s5.6 2.4 8.4 0"/><path d="M15 5c3.5 1.2 5.2 4.2 4.5 7.4-2-1.2-4.1-1.2-6.2.1 1.8-2.3 2.4-4.8 1.7-7.5Z"/></symbol>
+      <symbol id="icon-shell" viewBox="0 0 24 24"><path d="M4 18c.7-6.8 4.1-11.5 8-11.5S19.3 11.2 20 18"/><path d="M5 18h14l-2 3H7l-2-3Z"/><path d="M12 6.5V18M8.2 9.2 10.4 18M15.8 9.2 13.6 18M5.9 13.2 9 18M18.1 13.2 15 18"/></symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.7v2.1M12 19.2v2.1M4.1 4.1l1.5 1.5M18.4 18.4l1.5 1.5M2.7 12h2.1M19.2 12h2.1M4.1 19.9l1.5-1.5M18.4 5.6l1.5-1.5"/></symbol>
+      <symbol id="icon-fish" viewBox="0 0 24 24"><path d="M3 12s4-5 10-5 8 5 8 5-2 5-8 5-10-5-10-5Z"/><path d="M3 12 7 8v8l-4-4ZM16 12h.01"/></symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2Z"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+      <symbol id="icon-umbrella" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 16 0H4Z"/><path d="M12 12v8a2 2 0 0 0 4 0M8 12c.7-3 2-5.5 4-8 .9 2 1.6 4.6 2 8"/></symbol>
+      <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M12 21s7-4.7 7-11a7 7 0 1 0-14 0c0 6.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+      <symbol id="icon-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 4c2 2.2 2 4.2 0 6-2-1.8-2-3.8 0-6ZM12 20c-2-2.2-2-4.2 0-6 2 1.8 2 3.8 0 6ZM4 12c2.2-2 4.2-2 6 0-1.8 2-3.8 2-6 0ZM20 12c-2.2 2-4.2 2-6 0 1.8-2 3.8-2 6 0Z"/></symbol>
+      <symbol id="icon-party" viewBox="0 0 24 24"><path d="M4 20 10 4l10 10L4 20Z"/><path d="M9 8l7 7M13 4c0-1.4 1.8-1.4 1.8 0 0 1.8 2.2 1.8 2.2 0M17 8c1.6-.8 2.8.7 1.7 1.8"/></symbol>
+      <symbol id="icon-watermelon" viewBox="0 0 24 24"><path d="M4 8c2.1 6.3 5.3 9.5 8 9.5S17.9 14.3 20 8H4Z"/><path d="M6.2 8c1.6 4.4 3.8 6.8 5.8 6.8s4.2-2.4 5.8-6.8"/><path d="M10 11h.01M14 11h.01M12 14h.01"/></symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M19 15.5A8 8 0 0 1 8.5 5a7 7 0 1 0 10.5 10.5Z"/><path d="M16 4v3M17.5 5.5h-3"/></symbol>
+      <symbol id="icon-palm" viewBox="0 0 24 24"><path d="M12 10v11"/><path d="M12 10C8 6 5 6 3 8c4 0 6 1 9 2ZM12 10c4-4 7-4 9-2-4 0-6 1-9 2ZM12 10C11 5 8.5 3 6 3c2.5 2.3 4 4.4 6 7ZM12 10c1-5 3.5-7 6-7-2.5 2.3-4 4.4-6 7Z"/></symbol>
+      <symbol id="icon-tent" viewBox="0 0 24 24"><path d="M3 20 12 4l9 16H3Z"/><path d="M12 4v16M12 20l4-7"/></symbol>
+      <symbol id="icon-bottle" viewBox="0 0 24 24"><path d="M9 3h6v4l2 3v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-9l2-3V3Z"/><path d="M9 7h6M8 13h5M8 17h4"/></symbol>
+      <symbol id="icon-bib" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z"/><path d="M5 9c0 7 3 12 7 12s7-5 7-12M10 15h4"/></symbol>
+      <symbol id="icon-caddy" viewBox="0 0 24 24"><path d="M5 9h14l-1 12H6L5 9Z"/><path d="M8 9a4 4 0 0 1 8 0M9 14h6"/></symbol>
+      <symbol id="icon-bath" viewBox="0 0 24 24"><path d="M4 12h17l-2 7H7l-3-7Z"/><path d="M7 12V7a3 3 0 0 1 6 0M13 7h2M8 19v2M17 19v2"/></symbol>
+      <symbol id="icon-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 16.9l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></symbol>
+      <symbol id="icon-shirt" viewBox="0 0 24 24"><path d="M8 5 4 8l3 4 1-1v10h8V11l1 1 3-4-4-3-2 2h-4L8 5Z"/></symbol>
+      <symbol id="icon-cloth" viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M6 9h12M10 4v16M14 4v16"/></symbol>
+      <symbol id="icon-firstaid" viewBox="0 0 24 24"><path d="M7 7V5h10v2h4v14H3V7h4Z"/><path d="M12 11v6M9 14h6"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" id="floaters"></div>
+
+  <div class="pointer-events-none fixed inset-x-0 bottom-0 z-0 h-[86px] overflow-hidden" aria-hidden="true">
+    <svg class="absolute bottom-0 left-0 h-[86px] w-[200%] animate-wave" viewBox="0 0 1600 86" preserveAspectRatio="none">
+      <path d="M0,43 C100,82 200,4 400,43 C600,82 700,4 800,43 C900,82 1000,4 1200,43 C1400,82 1500,4 1600,43 L1600,86 L0,86 Z" fill="#0077b6" opacity=".42"></path>
+    </svg>
+    <svg class="absolute bottom-0 left-0 h-[86px] w-[200%] animate-waveSlow" viewBox="0 0 1600 86" preserveAspectRatio="none">
+      <path d="M0,55 C150,12 250,75 400,43 C550,12 650,75 800,55 C950,12 1050,75 1200,43 C1350,12 1450,75 1600,55 L1600,86 L0,86 Z" fill="#90e0ef" opacity=".58"></path>
+    </svg>
+  </div>
+
+  <main class="relative z-10 mx-auto grid w-full max-w-[1080px] grid-cols-1 items-start gap-[22px] lg:grid-cols-[1fr_1.2fr]">
+    <!-- LEFT COLUMN: Forms -->
+    <div class="grid gap-[22px]">
+      <!-- Title & Back navigation -->
+      <section class="overflow-hidden rounded-[28px] bg-white/90 p-5 shadow-card backdrop-blur-lg flex items-center justify-between">
+        <div>
+          <h1 class="font-pacifico text-2xl text-ocean">Registry Settings</h1>
+          <p class="text-xs font-bold text-[#497184] mt-0.5">Customize details & gifts</p>
+        </div>
+        <a href="index.html" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-seafoam text-ocean font-bold text-sm border-2 border-ocean/10 transition hover:-translate-y-px hover:bg-ocean hover:text-white hover:shadow-soft">
+          <svg class="h-4 w-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Registry
+        </a>
+      </section>
+
+      <!-- Shower Details Form -->
+      <section class="overflow-hidden rounded-[28px] bg-white/90 p-[22px] shadow-card backdrop-blur-lg" aria-label="Edit Shower Details">
+        <h2 class="font-pacifico text-lg text-ocean mb-4 flex items-center gap-2">
+          <svg class="h-5 w-5 fill-none stroke-coral stroke-[2.2]"><use href="#icon-calendar"></use></svg>
+          Shower Details
+        </h2>
+        <form id="detailsForm" class="grid gap-4">
+          <div>
+            <label class="block text-xs font-extrabold text-[#497184] uppercase tracking-wider mb-1.5" for="inputDate">Date & Time</label>
+            <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean" type="text" id="inputDate" required placeholder="e.g. Sunday, July 13 at 12:30 PM">
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-[#497184] uppercase tracking-wider mb-1.5" for="inputTheme">Theme Description</label>
+            <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean" type="text" id="inputTheme" required placeholder="e.g. Summer beach, seafoam blues, coral">
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-[#497184] uppercase tracking-wider mb-1.5" for="inputPlace">Place/Address</label>
+            <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean" type="text" id="inputPlace" required placeholder="e.g. 123 Sandy Shore Drive">
+          </div>
+          <button type="submit" class="w-full rounded-xl border-0 bg-gradient-to-br from-coral to-[#f7a07a] py-3 font-extrabold text-white shadow-soft hover:-translate-y-px active:translate-y-0 transition">
+            Save Details
+          </button>
+        </form>
+      </section>
+
+      <!-- Add/Edit Gift Form -->
+      <section class="overflow-hidden rounded-[28px] bg-white/90 p-[22px] shadow-card backdrop-blur-lg" aria-label="Add or Edit Gift">
+        <h2 class="font-pacifico text-lg text-ocean mb-4 flex items-center gap-2" id="formTitle">
+          <svg class="h-5 w-5 fill-none stroke-coral stroke-[2.2]"><use href="#icon-shell"></use></svg>
+          Add New Gift
+        </h2>
+        <form id="giftForm" class="grid gap-4">
+          <input type="hidden" id="editIndex" value="">
+          <div>
+            <label class="block text-xs font-extrabold text-[#497184] uppercase tracking-wider mb-1.5" for="giftName">Gift Name</label>
+            <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean" type="text" id="giftName" required placeholder="e.g. Cozy Hooded Towel">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-extrabold text-[#497184] uppercase tracking-wider mb-1.5" for="giftPrice">Price</label>
+              <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean" type="text" id="giftPrice" required placeholder="e.g. $25">
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-[#497184] uppercase tracking-wider mb-1.5" for="giftCategory">Category</label>
+              <select class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean" id="giftCategory" required>
+                <option value="nursery">Nursery</option>
+                <option value="beach">Beach</option>
+                <option value="feeding">Feeding</option>
+                <option value="care">Care</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-[#497184] uppercase tracking-wider mb-1.5" for="giftNote">Description / Note</label>
+            <textarea class="w-full min-h-[60px] resize-y rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean" id="giftNote" placeholder="Why do you need this?"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold text-[#497184] uppercase tracking-wider mb-1.5">Choose Icon</label>
+            <div class="grid grid-cols-6 gap-2 bg-gradient-to-br from-seafoam/50 to-white p-2.5 rounded-xl border border-ocean/10" id="iconPicker">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button type="submit" id="submitBtn" class="flex-1 rounded-xl border-0 bg-gradient-to-br from-coral to-[#f7a07a] py-3 font-extrabold text-white shadow-soft hover:-translate-y-px transition">
+              Add Gift
+            </button>
+            <button type="button" id="cancelEditBtn" class="hidden px-4 rounded-xl border-2 border-[#b8e8f5] bg-white font-extrabold text-deep hover:-translate-y-px transition">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- RIGHT COLUMN: Registry Items List -->
+    <section class="overflow-hidden rounded-[28px] bg-white/90 p-[22px] shadow-card backdrop-blur-lg h-full flex flex-col" aria-label="Manage Registry Items">
+      <div class="mb-4">
+        <h2 class="font-pacifico text-lg text-ocean">Registry Gift List</h2>
+        <p class="text-xs font-bold text-[#497184] mt-0.5">Edit or remove items currently on the registry</p>
+      </div>
+
+      <div class="overflow-y-auto flex-1 max-h-[720px] pr-1 space-y-3" id="giftListContainer">
+        <!-- List rendered dynamically -->
+      </div>
+    </section>
+
+<section class="overflow-hidden rounded-[28px] bg-white/90 p-[22px] shadow-card backdrop-blur-lg sm:p-6" aria-label="Guest List">
+  <div class="mb-4">
+    <h2 class="font-pacifico text-lg text-ocean">Guest List</h2>
+    <p class="text-xs font-bold text-[#497184] mt-0.5">RSVPs and details</p>
+  </div>
+  <div class="overflow-y-auto flex-1 max-h-[720px] pr-1 space-y-3" id="guestListContainer">
+    <!-- List rendered dynamically -->
+  </div>
+</section>
+  </main>
+
+  <script>
+    // Floating icons background setup
+    const floatingIcons = ['wave', 'shell', 'fish', 'star', 'flower', 'sun', 'umbrella'];
+    const floaterContainer = document.getElementById('floaters');
+
+    for (let i = 0; i < 18; i += 1) {
+      const el = document.createElement('div');
+      const iconName = floatingIcons[Math.floor(Math.random() * floatingIcons.length)];
+      el.className = 'absolute animate-floatUp text-ocean/20 drop-shadow-[0_3px_6px_rgba(0,119,182,.12)]';
+      el.innerHTML = `<svg class="h-8 w-8 fill-none stroke-current stroke-2" aria-hidden="true"><use href="#icon-${iconName}"></use></svg>`;
+      el.style.left = `${Math.random() * 100}vw`;
+      el.style.animationDuration = `${8 + Math.random() * 14}s`;
+      el.style.animationDelay = `${Math.random() * 12}s`;
+      el.style.fontSize = `${1.2 + Math.random() * 1.4}rem`;
+      floaterContainer.appendChild(el);
+    }
+
+    // Default configuration matching index.html
+    const DEFAULT_DETAILS = {
+      date: 'Sunday, July 13 at 12:30 PM',
+      theme: 'Summer beach, seafoam blues, coral, and sunshine',
+      place: 'Add your shower address here'
+    };
+
+    const DEFAULT_GIFTS = [
+      { name: 'Wave-Soft Swaddle Set', category: 'nursery', price: '$32', icon: 'wave', note: 'Light cotton muslin for warm July naps and stroller walks.', reserved: false },
+      { name: 'Sea Glass Sound Machine', category: 'nursery', price: '$48', icon: 'moon', note: 'Ocean sounds and soft light for bedtime.', reserved: false },
+      { name: 'Palm Shade Stroller Fan', category: 'beach', price: '$29', icon: 'palm', note: 'Rechargeable fan for sunny walks and beach days.', reserved: false },
+      { name: 'Baby Beach Tent', category: 'beach', price: '$76', icon: 'tent', note: 'Portable shade for picnics, shore days, and backyard lounging.', reserved: false },
+      { name: 'Bottle Warmer', category: 'feeding', price: '$41', icon: 'bottle', note: 'Compact warmer for nighttime bottles and early mornings.', reserved: false },
+      { name: 'Ocean Bib Bundle', category: 'feeding', price: '$22', icon: 'bib', note: 'Soft waterproof bibs in shell, wave, and sailboat prints.', reserved: false },
+      { name: 'Newborn Diaper Caddy', category: 'care', price: '$35', icon: 'caddy', note: 'Keeps wipes, diapers, cream, and tiny socks in one place.', reserved: false },
+      { name: 'Gentle Bath Kit', category: 'care', price: '$44', icon: 'bath', note: 'Wash, lotion, hooded towel, and brush for first baths.', reserved: false },
+      { name: 'Sandy Toes Play Mat', category: 'nursery', price: '$58', icon: 'star', note: 'Padded coastal-color mat for tummy time.', reserved: false },
+      { name: 'UPF Swim Romper', category: 'beach', price: '$26', icon: 'shirt', note: 'Sun-safe baby swim layer for future splash days.', reserved: false },
+      { name: 'Burp Cloth Stack', category: 'feeding', price: '$18', icon: 'cloth', note: 'Absorbent everyday cloths in breezy blue and white.', reserved: false },
+      { name: 'Mini First Aid Pouch', category: 'care', price: '$24', icon: 'firstaid', note: 'Thermometer, nail file, medicine pacifier, and travel pouch.', reserved: false }
+    ];
+
+    const AVAILABLE_ICONS = ['wave', 'shell', 'sun', 'fish', 'calendar', 'umbrella', 'flower', 'party', 'watermelon', 'moon', 'palm', 'tent', 'bottle', 'bib', 'caddy', 'bath', 'star', 'shirt', 'cloth', 'firstaid'];
+
+    // Load elements & details
+    let details = JSON.parse(localStorage.getItem('baby_shower_details')) || DEFAULT_DETAILS;
+    let gifts = JSON.parse(localStorage.getItem('baby_shower_gifts')) || DEFAULT_GIFTS;
+
+    document.getElementById('inputDate').value = details.date;
+    document.getElementById('inputTheme').value = details.theme;
+    document.getElementById('inputPlace').value = details.place;
+
+    // Build icon picker HTML
+    const iconPicker = document.getElementById('iconPicker');
+    iconPicker.innerHTML = AVAILABLE_ICONS.map((icon, i) => `
+      <label class="cursor-pointer border-2 border-transparent p-1.5 rounded-xl hover:border-ocean/20 hover:bg-white flex items-center justify-center transition" data-icon="${icon}">
+        <input type="radio" name="giftIcon" value="${icon}" class="hidden" ${i === 0 ? 'checked' : ''}>
+        <svg class="h-6 w-6 stroke-ocean stroke-2 fill-none"><use href="#icon-${icon}"></use></svg>
+      </label>
+    `).join('');
+
+    // Setup icon picker active state
+    function updateIconPickerSelection() {
+      const selectedRadio = document.querySelector('input[name="giftIcon"]:checked');
+      document.querySelectorAll('#iconPicker label').forEach(label => {
+        const iconName = label.dataset.icon;
+        if (selectedRadio && iconName === selectedRadio.value) {
+          label.className = 'cursor-pointer border-2 border-ocean bg-white p-1.5 rounded-xl flex items-center justify-center transition shadow-soft scale-105';
+        } else {
+          label.className = 'cursor-pointer border-2 border-transparent p-1.5 rounded-xl hover:border-ocean/20 hover:bg-white flex items-center justify-center transition';
+        }
+      });
+    }
+
+    iconPicker.addEventListener('change', updateIconPickerSelection);
+    updateIconPickerSelection();
+
+    // Render registry gift list
+    const giftListContainer = document.getElementById('giftListContainer');
+    
+    function renderRegistryList() {
+      if (gifts.length === 0) {
+        giftListContainer.innerHTML = `<div class="p-6 text-center text-sm font-bold text-[#497184] border-2 border-dashed border-[#b8e8f5] rounded-2xl bg-white/50">No items on the registry yet. Add some on the left!</div>`;
+        return;
+      }
+
+      giftListContainer.innerHTML = gifts.map((gift, index) => {
+        const reservedLabel = gift.reserved 
+          ? `<span class="bg-[#d4f7e5] text-[#1a6640] text-[.72rem] px-2 py-0.5 rounded-full font-extrabold flex items-center gap-1">Reserved</span>` 
+          : `<span class="bg-seafoam text-ocean text-[.72rem] px-2 py-0.5 rounded-full font-extrabold flex items-center gap-1 cursor-pointer hover:bg-ocean hover:text-white transition" onclick="toggleReservation(${index})">Available</span>`;
+
+        return `
+          <div class="flex items-center justify-between gap-3 p-3 bg-white rounded-xl border border-ocean/10 shadow-soft hover:shadow-md transition">
+            <div class="flex items-center gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-sand to-[#fff8e8]" aria-hidden="true">
+                <svg class="h-6 w-6 stroke-ocean stroke-2 fill-none"><use href="#icon-${gift.icon}"></use></svg>
+              </span>
+              <div>
+                <h3 class="text-sm font-extrabold leading-snug text-deep">${gift.name}</h3>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-xs font-extrabold text-[#497184] uppercase tracking-wider">${gift.category}</span>
+                  <span class="text-xs font-black text-coral">${gift.price}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              ${reservedLabel}
+              <button type="button" onclick="loadGiftForEdit(${index})" class="p-2 rounded-lg bg-seafoam/60 hover:bg-ocean hover:text-white transition text-ocean" title="Edit Item">
+                <svg class="h-4 w-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button type="button" onclick="deleteGift(${index})" class="p-2 rounded-lg bg-[#ffe0e0] hover:bg-[#ffe0e0] hover:text-[#b91c1c] text-[#b91c1c] transition" title="Delete Item">
+                <svg class="h-4 w-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Save shower details form
+    document.getElementById('detailsForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      details.date = document.getElementById('inputDate').value.trim();
+      details.theme = document.getElementById('inputTheme').value.trim();
+      details.place = document.getElementById('inputPlace').value.trim();
+      localStorage.setItem('baby_shower_details', JSON.stringify(details));
+      alert('Shower details saved successfully!');
+    });
+
+    // Add/Edit gift form submit
+    const giftForm = document.getElementById('giftForm');
+    const formTitle = document.getElementById('formTitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const editIndexInput = document.getElementById('editIndex');
+
+    giftForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('giftName').value.trim();
+      const price = document.getElementById('giftPrice').value.trim();
+      const category = document.getElementById('giftCategory').value;
+      const note = document.getElementById('giftNote').value.trim();
+      const icon = document.querySelector('input[name="giftIcon"]:checked').value;
+      const editIndex = editIndexInput.value;
+
+      if (editIndex !== "") {
+        // Edit mode
+        const i = Number(editIndex);
+        gifts[i] = { 
+          ...gifts[i], 
+          name, 
+          price: price.startsWith('$') ? price : '$' + price, 
+          category, 
+          note, 
+          icon 
+        };
+        editIndexInput.value = "";
+        formTitle.innerHTML = `<svg class="h-5 w-5 fill-none stroke-coral stroke-[2.2]"><use href="#icon-shell"></use></svg> Add New Gift`;
+        submitBtn.textContent = "Add Gift";
+        cancelEditBtn.classList.add('hidden');
+      } else {
+        // Add mode
+        gifts.push({
+          name,
+          price: price.startsWith('$') ? price : '$' + price,
+          category,
+          note,
+          icon,
+          reserved: false
+        });
+      }
+
+      localStorage.setItem('baby_shower_gifts', JSON.stringify(gifts));
+      giftForm.reset();
+      updateIconPickerSelection();
+      renderRegistryList();
+    });
+
+    // Load gift to form for editing
+    window.loadGiftForEdit = function(index) {
+      const gift = gifts[index];
+      document.getElementById('giftName').value = gift.name;
+      document.getElementById('giftPrice').value = gift.price;
+      document.getElementById('giftCategory').value = gift.category;
+      document.getElementById('giftNote').value = gift.note || "";
+      
+      // Select icon in radio picker
+      const radio = document.querySelector(`input[name="giftIcon"][value="${gift.icon}"]`);
+      if (radio) {
+        radio.checked = true;
+        updateIconPickerSelection();
+      }
+
+      editIndexInput.value = index;
+      formTitle.innerHTML = `<svg class="h-5 w-5 fill-none stroke-coral stroke-[2.2]"><use href="#icon-shell"></use></svg> Edit Registry Gift`;
+      submitBtn.textContent = "Update Gift";
+      cancelEditBtn.classList.remove('hidden');
+      
+      // Smooth scroll form into view for mobile
+      giftForm.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Cancel edit mode
+    cancelEditBtn.addEventListener('click', function() {
+      editIndexInput.value = "";
+      giftForm.reset();
+      formTitle.innerHTML = `<svg class="h-5 w-5 fill-none stroke-coral stroke-[2.2]"><use href="#icon-shell"></use></svg> Add New Gift`;
+      submitBtn.textContent = "Add Gift";
+      cancelEditBtn.classList.add('hidden');
+      updateIconPickerSelection();
+    });
+
+    // Delete gift from list
+    window.deleteGift = function(index) {
+      if (confirm(`Are you sure you want to delete "${gifts[index].name}"?`)) {
+        // If we are currently editing this item, cancel the edit mode first
+        if (editIndexInput.value === String(index)) {
+          cancelEditBtn.click();
+        }
+        gifts.splice(index, 1);
+        localStorage.setItem('baby_shower_gifts', JSON.stringify(gifts));
+        renderRegistryList();
+      }
+    };
+
+    // Toggle reservation manually from list
+    window.toggleReservation = function(index) {
+      gifts[index].reserved = !gifts[index].reserved;
+      localStorage.setItem('baby_shower_gifts', JSON.stringify(gifts));
+      renderRegistryList();
+    };
+
+    // Initial render
+    renderRegistryList();
+  </script>
+</body>
+</html>
