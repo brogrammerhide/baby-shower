@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summer Beach Baby Shower Registry</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ocean: '#0077b6',
+            deep: '#1a3a4a',
+            sky: '#90e0ef',
+            sand: '#fde8c8',
+            seafoam: '#caf0f8',
+            coral: '#f4845f',
+            sun: '#ffd166'
+          },
+          fontFamily: {
+            nunito: ['Nunito', 'sans-serif'],
+            pacifico: ['Pacifico', 'cursive']
+          },
+          boxShadow: {
+            card: '0 2px 0 rgba(255,255,255,.9) inset, 0 -2px 0 rgba(0,0,0,.04) inset, 0 20px 60px rgba(0,119,182,.18), 0 6px 20px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.05)',
+            soft: '0 4px 14px rgba(0,119,182,.07), 0 1px 3px rgba(0,0,0,.04)',
+            coralButton: '0 6px 0 #c9603a, 0 8px 20px rgba(244,132,95,.35)',
+            coralButtonHover: '0 8px 0 #c9603a, 0 12px 24px rgba(244,132,95,.4)',
+            coralButtonActive: '0 2px 0 #c9603a, 0 4px 12px rgba(244,132,95,.25)',
+            mintButton: '0 4px 0 #48a78c, 0 7px 15px rgba(72,167,140,.22)'
+          },
+          keyframes: {
+            wave: {
+              '0%': { transform: 'translateX(0)' },
+              '100%': { transform: 'translateX(-50%)' }
+            },
+            floatUp: {
+              '0%': { transform: 'translateY(110vh) rotate(0deg)', opacity: '.2' },
+              '100%': { transform: 'translateY(-12vh) rotate(360deg)', opacity: '0' }
+            },
+            popIn: {
+              '0%': { transform: 'scale(.7)', opacity: '0' },
+              '100%': { transform: 'scale(1)', opacity: '1' }
+            }
+          },
+          animation: {
+            wave: 'wave 6s linear infinite',
+            waveSlow: 'wave 9s linear infinite reverse',
+            floatUp: 'floatUp linear infinite',
+            popIn: 'popIn .3s ease'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body class="relative min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_16%_10%,rgba(255,209,102,.55),transparent_260px),radial-gradient(circle_at_86%_18%,rgba(110,214,181,.35),transparent_300px),linear-gradient(180deg,#b8f0ff_0%,#e0f7fa_42%,#fde8c8_100%)] px-3 py-[18px] pb-[108px] font-nunito text-deep sm:px-4 sm:py-[30px] sm:pb-28">
+  <svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="icon-wave" viewBox="0 0 24 24"><path d="M3 15c2.8-2.4 5.6-2.4 8.4 0s5.6 2.4 8.4 0"/><path d="M3 19c2.8-2.4 5.6-2.4 8.4 0s5.6 2.4 8.4 0"/><path d="M15 5c3.5 1.2 5.2 4.2 4.5 7.4-2-1.2-4.1-1.2-6.2.1 1.8-2.3 2.4-4.8 1.7-7.5Z"/></symbol>
+      <symbol id="icon-shell" viewBox="0 0 24 24"><path d="M4 18c.7-6.8 4.1-11.5 8-11.5S19.3 11.2 20 18"/><path d="M5 18h14l-2 3H7l-2-3Z"/><path d="M12 6.5V18M8.2 9.2 10.4 18M15.8 9.2 13.6 18M5.9 13.2 9 18M18.1 13.2 15 18"/></symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.7v2.1M12 19.2v2.1M4.1 4.1l1.5 1.5M18.4 18.4l1.5 1.5M2.7 12h2.1M19.2 12h2.1M4.1 19.9l1.5-1.5M18.4 5.6l1.5-1.5"/></symbol>
+      <symbol id="icon-fish" viewBox="0 0 24 24"><path d="M3 12s4-5 10-5 8 5 8 5-2 5-8 5-10-5-10-5Z"/><path d="M3 12 7 8v8l-4-4ZM16 12h.01"/></symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2Z"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+      <symbol id="icon-umbrella" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 16 0H4Z"/><path d="M12 12v8a2 2 0 0 0 4 0M8 12c.7-3 2-5.5 4-8 .9 2 1.6 4.6 2 8"/></symbol>
+      <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M12 21s7-4.7 7-11a7 7 0 1 0-14 0c0 6.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+      <symbol id="icon-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 4c2 2.2 2 4.2 0 6-2-1.8-2-3.8 0-6ZM12 20c-2-2.2-2-4.2 0-6 2 1.8 2 3.8 0 6ZM4 12c2.2-2 4.2-2 6 0-1.8 2-3.8 2-6 0ZM20 12c-2.2 2-4.2 2-6 0 1.8-2 3.8-2 6 0Z"/></symbol>
+      <symbol id="icon-party" viewBox="0 0 24 24"><path d="M4 20 10 4l10 10L4 20Z"/><path d="M9 8l7 7M13 4c0-1.4 1.8-1.4 1.8 0 0 1.8 2.2 1.8 2.2 0M17 8c1.6-.8 2.8.7 1.7 1.8"/></symbol>
+      <symbol id="icon-watermelon" viewBox="0 0 24 24"><path d="M4 8c2.1 6.3 5.3 9.5 8 9.5S17.9 14.3 20 8H4Z"/><path d="M6.2 8c1.6 4.4 3.8 6.8 5.8 6.8s4.2-2.4 5.8-6.8"/><path d="M10 11h.01M14 11h.01M12 14h.01"/></symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M19 15.5A8 8 0 0 1 8.5 5a7 7 0 1 0 10.5 10.5Z"/><path d="M16 4v3M17.5 5.5h-3"/></symbol>
+      <symbol id="icon-palm" viewBox="0 0 24 24"><path d="M12 10v11"/><path d="M12 10C8 6 5 6 3 8c4 0 6 1 9 2ZM12 10c4-4 7-4 9-2-4 0-6 1-9 2ZM12 10C11 5 8.5 3 6 3c2.5 2.3 4 4.4 6 7ZM12 10c1-5 3.5-7 6-7-2.5 2.3-4 4.4-6 7Z"/></symbol>
+      <symbol id="icon-tent" viewBox="0 0 24 24"><path d="M3 20 12 4l9 16H3Z"/><path d="M12 4v16M12 20l4-7"/></symbol>
+      <symbol id="icon-bottle" viewBox="0 0 24 24"><path d="M9 3h6v4l2 3v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-9l2-3V3Z"/><path d="M9 7h6M8 13h5M8 17h4"/></symbol>
+      <symbol id="icon-bib" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z"/><path d="M5 9c0 7 3 12 7 12s7-5 7-12M10 15h4"/></symbol>
+      <symbol id="icon-caddy" viewBox="0 0 24 24"><path d="M5 9h14l-1 12H6L5 9Z"/><path d="M8 9a4 4 0 0 1 8 0M9 14h6"/></symbol>
+      <symbol id="icon-bath" viewBox="0 0 24 24"><path d="M4 12h17l-2 7H7l-3-7Z"/><path d="M7 12V7a3 3 0 0 1 6 0M13 7h2M8 19v2M17 19v2"/></symbol>
+      <symbol id="icon-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 16.9l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></symbol>
+      <symbol id="icon-shirt" viewBox="0 0 24 24"><path d="M8 5 4 8l3 4 1-1v10h8V11l1 1 3-4-4-3-2 2h-4L8 5Z"/></symbol>
+      <symbol id="icon-cloth" viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M6 9h12M10 4v16M14 4v16"/></symbol>
+      <symbol id="icon-firstaid" viewBox="0 0 24 24"><path d="M7 7V5h10v2h4v14H3V7h4Z"/><path d="M12 11v6M9 14h6"/></symbol>
+    </defs>
+  </svg>
+
+  <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" id="floaters"></div>
+
+  <div class="pointer-events-none fixed inset-x-0 bottom-0 z-0 h-[86px] overflow-hidden" aria-hidden="true">
+    <svg class="absolute bottom-0 left-0 h-[86px] w-[200%] animate-wave" viewBox="0 0 1600 86" preserveAspectRatio="none">
+      <path d="M0,43 C100,82 200,4 400,43 C600,82 700,4 800,43 C900,82 1000,4 1200,43 C1400,82 1500,4 1600,43 L1600,86 L0,86 Z" fill="#0077b6" opacity=".42"></path>
+    </svg>
+    <svg class="absolute bottom-0 left-0 h-[86px] w-[200%] animate-waveSlow" viewBox="0 0 1600 86" preserveAspectRatio="none">
+      <path d="M0,55 C150,12 250,75 400,43 C550,12 650,75 800,55 C950,12 1050,75 1200,43 C1350,12 1450,75 1600,55 L1600,86 L0,86 Z" fill="#90e0ef" opacity=".58"></path>
+    </svg>
+  </div>
+
+  <main class="relative z-10 mx-auto grid w-full max-w-[1040px] grid-cols-1 items-start gap-[22px] lg:grid-cols-[minmax(310px,.88fr)_minmax(0,1.12fr)]">
+    <section class="overflow-hidden rounded-[28px] bg-white/90 shadow-card backdrop-blur-lg lg:sticky lg:top-[22px]" aria-label="Baby shower details">
+      <div class="relative bg-gradient-to-br from-ocean to-[#48cae4] px-[18px] pb-[42px] pt-[34px] text-center shadow-[inset_0_4px_20px_rgba(0,119,182,.3)] after:absolute after:bottom-[-1px] after:left-0 after:h-[30px] after:w-full after:bg-white/90 after:[clip-path:ellipse(55%_100%_at_50%_100%)] sm:px-7">
+        <span class="mb-2.5 flex items-center justify-center gap-2.5 text-[#eefcff] drop-shadow-[0_2px_5px_rgba(0,0,0,.16)]" aria-hidden="true">
+          <svg class="h-[34px] w-[34px] fill-none stroke-current stroke-2"><use href="#icon-wave"></use></svg>
+          <svg class="h-[34px] w-[34px] fill-none stroke-current stroke-2"><use href="#icon-shell"></use></svg>
+          <svg class="h-[34px] w-[34px] fill-none stroke-current stroke-2"><use href="#icon-sun"></use></svg>
+          <svg class="h-[34px] w-[34px] fill-none stroke-current stroke-2"><use href="#icon-fish"></use></svg>
+        </span>
+        <h1 class="mb-2.5 font-pacifico text-[clamp(2rem,7vw,3.05rem)] leading-[1.05] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,.15)]">Baby Shower!</h1>
+        <p class="text-base font-extrabold leading-normal text-[#eefcff]">Celebrating our little summer boy, arriving in July.</p>
+      </div>
+
+      <div class="flex min-h-[190px] flex-col items-center justify-center px-[18px] pb-2 pt-4 transition-all duration-300" id="babyStage">
+        <div class="relative mb-1.5 hidden animate-popIn rounded-2xl bg-white px-4 py-2 text-sm font-extrabold text-deep shadow-[0_3px_10px_rgba(0,0,0,.1)] after:absolute after:bottom-[-10px] after:left-1/2 after:-translate-x-1/2 after:border-[6px] after:border-transparent after:border-t-[inherit]" id="speechBubble">Yay, see you there!</div>
+        <lottie-player
+          id="babyPlayer"
+          class="h-40 w-40 transition-opacity duration-300"
+          src="https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json"
+          background="transparent"
+          speed="1"
+          loop autoplay>
+        </lottie-player>
+        <div class="min-h-7 text-center font-pacifico text-base text-ocean" id="babyLabel">Will you come celebrate?</div>
+      </div>
+
+      <div class="grid gap-3.5 px-7 pb-[30px] pt-2">
+        <div class="grid grid-cols-[42px_1fr] items-center gap-3 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] p-[13px] shadow-soft">
+          <span class="grid h-[42px] w-[42px] place-items-center rounded-[14px] bg-white shadow-[0_2px_7px_rgba(0,0,0,.06)]" aria-hidden="true"><svg class="h-[23px] w-[23px] fill-none stroke-ocean stroke-2"><use href="#icon-calendar"></use></svg></span>
+          <div><strong class="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">Date</strong><span class="block font-extrabold leading-snug">Sunday, July 13 at 12:30 PM</span></div>
+        </div>
+        <div class="grid grid-cols-[42px_1fr] items-center gap-3 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] p-[13px] shadow-soft">
+          <span class="grid h-[42px] w-[42px] place-items-center rounded-[14px] bg-white shadow-[0_2px_7px_rgba(0,0,0,.06)]" aria-hidden="true"><svg class="h-[23px] w-[23px] fill-none stroke-ocean stroke-2"><use href="#icon-umbrella"></use></svg></span>
+          <div><strong class="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">Theme</strong><span class="block font-extrabold leading-snug">Summer beach, seafoam blues, coral, and sunshine</span></div>
+        </div>
+        <div class="grid grid-cols-[42px_1fr] items-center gap-3 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] p-[13px] shadow-soft">
+          <span class="grid h-[42px] w-[42px] place-items-center rounded-[14px] bg-white shadow-[0_2px_7px_rgba(0,0,0,.06)]" aria-hidden="true"><svg class="h-[23px] w-[23px] fill-none stroke-ocean stroke-2"><use href="#icon-pin"></use></svg></span>
+          <div><strong class="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">Place</strong><span class="block font-extrabold leading-snug">Add your shower address here</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="overflow-hidden rounded-[28px] bg-white/90 p-[18px] shadow-card backdrop-blur-lg sm:p-6" aria-label="Baby shower registry and RSVP app">
+      <!-- RSVP Section -->
+      <div class="mb-8">
+        <div class="mb-[18px] grid items-start gap-[18px] sm:flex sm:items-end sm:justify-between">
+          <h2 class="font-pacifico text-[clamp(1.65rem,5vw,2.3rem)] leading-tight text-ocean">Kindly RSVP</h2>
+          <p class="max-w-[420px] font-bold leading-normal text-[#315566]">Please let us know if you can make it to our beachy July celebration.</p>
+        </div>
+
+        <div class="px-0 sm:px-0">
+          <form id="rsvpForm">
+            <div class="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
+              <div class="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean"><svg class="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" aria-hidden="true"><use href="#icon-flower"></use></svg> Your Info</div>
+              <label class="mb-1.5 block text-sm font-extrabold text-deep" for="name">Your Full Name</label>
+              <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" type="text" id="name" name="name" placeholder="e.g. Alice Smith" required>
+              <label class="mb-1.5 mt-3 block text-sm font-extrabold text-deep" for="email">Email Address</label>
+              <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" type="email" id="email" name="email" placeholder="e.g. alice@email.com">
+            </div>
+
+            <div class="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
+              <div class="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean"><svg class="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" aria-hidden="true"><use href="#icon-party"></use></svg> Will you be joining us?</div>
+              <div class="mb-3 grid gap-2.5">
+                <label class="radio-option flex cursor-pointer items-center gap-2.5 rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]">
+                  <input class="h-[18px] w-[18px] accent-ocean" type="radio" name="attending" value="yes" id="attendYes" required>
+                  Yes, I'll be there!
+                </label>
+                <label class="radio-option flex cursor-pointer items-center gap-2.5 rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]">
+                  <input class="h-[18px] w-[18px] accent-ocean" type="radio" name="attending" value="no" id="attendNo">
+                  Sorry, I can't make it
+                </label>
+              </div>
+              <label class="mb-1.5 block text-sm font-extrabold text-deep" for="guests">Number of guests, including yourself</label>
+              <input class="w-full rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" type="number" id="guests" name="guests" min="1" max="10" value="1">
+            </div>
+
+            <div class="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
+              <div class="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean"><svg class="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" aria-hidden="true"><use href="#icon-watermelon"></use></svg> Dietary Restrictions</div>
+              <div class="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="vegetarian"> Vegetarian</label>
+                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="vegan"> Vegan</label>
+                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="gluten-free"> Gluten-Free</label>
+                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="nut-allergy"> Nut Allergy</label>
+                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="dairy-free"> Dairy-Free</label>
+                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="halal"> Halal</label>
+                <label class="check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]"><input class="h-4 w-4 accent-coral" type="checkbox" name="diet" value="kosher"> Kosher</label>
+              </div>
+              <label class="mb-1.5 block text-sm font-extrabold text-deep" for="otherDiet">Other notes</label>
+              <textarea class="min-h-[70px] w-full resize-y rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" id="otherDiet" name="otherDiet" placeholder="Anything else we should know?"></textarea>
+            </div>
+
+            <button type="submit" class="w-full rounded-2xl border-0 bg-gradient-to-br from-coral to-[#f7a07a] p-4 font-pacifico text-[1.15rem] text-white shadow-coralButton transition hover:-translate-y-0.5 hover:shadow-coralButtonHover active:translate-y-1 active:shadow-coralButtonActive">
+              Send my RSVP <svg class="ml-1.5 inline h-[22px] w-[22px] align-[-4px] fill-none stroke-current stroke-[2.4]" aria-hidden="true"><use href="#icon-wave"></use></svg>
+            </button>
+          </form>
+
+          <div class="hidden px-6 pb-[30px] pt-[42px] text-center" id="thankyou">
+            <div class="mb-4 flex items-center justify-center gap-2.5 text-ocean drop-shadow-[0_5px_10px_rgba(0,119,182,.18)]" aria-hidden="true">
+              <svg class="h-[46px] w-[46px] fill-none stroke-current stroke-2"><use href="#icon-shell"></use></svg>
+              <svg class="h-[46px] w-[46px] fill-none stroke-current stroke-2"><use href="#icon-wave"></use></svg>
+              <svg class="h-[46px] w-[46px] fill-none stroke-current stroke-2"><use href="#icon-sun"></use></svg>
+            </div>
+            <h2 class="mb-2.5 font-pacifico text-[1.8rem] text-ocean">See you at the beach!</h2>
+            <p class="text-base font-bold leading-relaxed text-deep">Thanks so much for your RSVP. We cannot wait to celebrate this July baby boy with you.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashed Beachy Divider -->
+      <div class="relative my-9 flex items-center justify-center">
+        <div class="absolute inset-0 flex items-center" aria-hidden="true">
+          <div class="w-full border-t-2 border-dashed border-[#b8e8f5]"></div>
+        </div>
+        <div class="relative flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-soft text-ocean border-2 border-[#b8e8f5]">
+          <svg class="h-[20px] w-[20px] fill-none stroke-current stroke-2"><use href="#icon-shell"></use></svg>
+        </div>
+      </div>
+
+      <!-- Registry Section -->
+      <div>
+        <div class="mb-[18px] grid items-start gap-[18px] sm:flex sm:items-end sm:justify-between">
+          <h2 class="font-pacifico text-[clamp(1.65rem,5vw,2.3rem)] leading-tight text-ocean">Little Wave Registry</h2>
+          <p class="max-w-[420px] font-bold leading-normal text-[#315566]">Pick a gift, reserve it, and help us get ready for our beachy July baby.</p>
+        </div>
+
+        <div class="mb-[18px] grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+          <div class="rounded-[18px] border border-ocean/15 bg-gradient-to-br from-white to-[#eaffff] p-[13px] text-center shadow-soft"><strong class="block text-[1.45rem] font-black leading-none text-coral" id="totalItems">0</strong><span class="mt-1.5 block text-xs font-extrabold uppercase tracking-[.04em] text-[#497184]">Gift ideas</span></div>
+          <div class="rounded-[18px] border border-ocean/15 bg-gradient-to-br from-white to-[#eaffff] p-[13px] text-center shadow-soft"><strong class="block text-[1.45rem] font-black leading-none text-coral" id="reservedItems">0</strong><span class="mt-1.5 block text-xs font-extrabold uppercase tracking-[.04em] text-[#497184]">Reserved</span></div>
+          <div class="rounded-[18px] border border-ocean/15 bg-gradient-to-br from-white to-[#eaffff] p-[13px] text-center shadow-soft"><strong class="block text-[1.45rem] font-black leading-none text-coral">July</strong><span class="mt-1.5 block text-xs font-extrabold uppercase tracking-[.04em] text-[#497184]">Baby due</span></div>
+        </div>
+
+        <div class="mb-4 grid items-center gap-2.5 sm:grid-cols-[minmax(0,1fr)_auto]">
+          <input class="min-h-11 w-full rounded-[14px] border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-deep shadow-[inset_0_2px_6px_rgba(0,0,0,.04)] outline-none transition focus:border-ocean focus:shadow-[0_0_0_3px_rgba(0,119,182,.12)]" id="searchInput" type="search" placeholder="Search gifts or notes" aria-label="Search registry">
+          <div class="flex flex-wrap justify-start gap-[7px] sm:justify-end" role="group" aria-label="Registry filters">
+            <button class="filter-btn active min-h-[39px] rounded-full border-2 border-ocean bg-seafoam px-[13px] font-black text-ocean transition hover:-translate-y-px" type="button" data-filter="all">All</button>
+            <button class="filter-btn min-h-[39px] rounded-full border-2 border-[#b8e8f5] bg-white px-[13px] font-black text-deep transition hover:-translate-y-px" type="button" data-filter="nursery">Nursery</button>
+            <button class="filter-btn min-h-[39px] rounded-full border-2 border-[#b8e8f5] bg-white px-[13px] font-black text-deep transition hover:-translate-y-px" type="button" data-filter="beach">Beach</button>
+            <button class="filter-btn min-h-[39px] rounded-full border-2 border-[#b8e8f5] bg-white px-[13px] font-black text-deep transition hover:-translate-y-px" type="button" data-filter="feeding">Feeding</button>
+            <button class="filter-btn min-h-[39px] rounded-full border-2 border-[#b8e8f5] bg-white px-[13px] font-black text-deep transition hover:-translate-y-px" type="button" data-filter="care">Care</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2" id="giftGrid" aria-live="polite">
+          <div class="hidden rounded-[18px] border-2 border-dashed border-[#b8e8f5] bg-white/70 p-6 text-center font-extrabold text-[#497184] sm:col-span-2" id="emptyState">No gifts match that search yet.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const baseFilterClass = 'filter-btn min-h-[39px] rounded-full border-2 border-[#b8e8f5] bg-white px-[13px] font-black text-deep transition hover:-translate-y-px';
+    const activeFilterClass = 'filter-btn active min-h-[39px] rounded-full border-2 border-ocean bg-seafoam px-[13px] font-black text-ocean transition hover:-translate-y-px';
+    const baseRadioClass = 'radio-option flex cursor-pointer items-center gap-2.5 rounded-xl border-2 border-[#b8e8f5] bg-white px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]';
+    const selectedRadioClass = 'radio-option flex cursor-pointer items-center gap-2.5 rounded-xl border-2 border-ocean bg-seafoam px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-[0_4px_14px_rgba(0,119,182,.18),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]';
+    const baseCheckClass = 'check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-[#b8e8f5] bg-white px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]';
+    const selectedCheckClass = 'check-option flex cursor-pointer items-center gap-2 rounded-[10px] border-2 border-coral bg-[#fff0eb] px-3 py-2 text-sm font-extrabold shadow-[0_3px_10px_rgba(0,0,0,.05),inset_0_1px_0_rgba(255,255,255,.8)] transition hover:-translate-y-px hover:shadow-[0_5px_15px_rgba(0,119,182,.12)]';
+
+    const floatingIcons = ['wave', 'shell', 'fish', 'star', 'flower', 'sun', 'umbrella'];
+    const floaterContainer = document.getElementById('floaters');
+
+    for (let i = 0; i < 18; i += 1) {
+      const el = document.createElement('div');
+      const iconName = floatingIcons[Math.floor(Math.random() * floatingIcons.length)];
+      el.className = 'absolute animate-floatUp text-ocean/20 drop-shadow-[0_3px_6px_rgba(0,119,182,.12)]';
+      el.innerHTML = `<svg class="h-8 w-8 fill-none stroke-current stroke-2" aria-hidden="true"><use href="#icon-${iconName}"></use></svg>`;
+      el.style.left = `${Math.random() * 100}vw`;
+      el.style.animationDuration = `${8 + Math.random() * 14}s`;
+      el.style.animationDelay = `${Math.random() * 12}s`;
+      el.style.fontSize = `${1.2 + Math.random() * 1.4}rem`;
+      floaterContainer.appendChild(el);
+    }
+
+    const gifts = [
+      { name: 'Wave-Soft Swaddle Set', category: 'nursery', price: '$32', icon: 'wave', note: 'Light cotton muslin for warm July naps and stroller walks.' },
+      { name: 'Sea Glass Sound Machine', category: 'nursery', price: '$48', icon: 'moon', note: 'Ocean sounds and soft light for bedtime.' },
+      { name: 'Palm Shade Stroller Fan', category: 'beach', price: '$29', icon: 'palm', note: 'Rechargeable fan for sunny walks and beach days.' },
+      { name: 'Baby Beach Tent', category: 'beach', price: '$76', icon: 'tent', note: 'Portable shade for picnics, shore days, and backyard lounging.' },
+      { name: 'Bottle Warmer', category: 'feeding', price: '$41', icon: 'bottle', note: 'Compact warmer for nighttime bottles and early mornings.' },
+      { name: 'Ocean Bib Bundle', category: 'feeding', price: '$22', icon: 'bib', note: 'Soft waterproof bibs in shell, wave, and sailboat prints.' },
+      { name: 'Newborn Diaper Caddy', category: 'care', price: '$35', icon: 'caddy', note: 'Keeps wipes, diapers, cream, and tiny socks in one place.' },
+      { name: 'Gentle Bath Kit', category: 'care', price: '$44', icon: 'bath', note: 'Wash, lotion, hooded towel, and brush for first baths.' },
+      { name: 'Sandy Toes Play Mat', category: 'nursery', price: '$58', icon: 'star', note: 'Padded coastal-color mat for tummy time.' },
+      { name: 'UPF Swim Romper', category: 'beach', price: '$26', icon: 'shirt', note: 'Sun-safe baby swim layer for future splash days.' },
+      { name: 'Burp Cloth Stack', category: 'feeding', price: '$18', icon: 'cloth', note: 'Absorbent everyday cloths in breezy blue and white.' },
+      { name: 'Mini First Aid Pouch', category: 'care', price: '$24', icon: 'firstaid', note: 'Thermometer, nail file, medicine pacifier, and travel pouch.' }
+    ];
+
+    const reserved = new Set();
+    let activeFilter = 'all';
+    const giftGrid = document.getElementById('giftGrid');
+    const emptyState = document.getElementById('emptyState');
+    const searchInput = document.getElementById('searchInput');
+    const totalItems = document.getElementById('totalItems');
+    const reservedItems = document.getElementById('reservedItems');
+
+    function giftCard(gift, index) {
+      const isReserved = reserved.has(index);
+      const buttonClass = isReserved
+        ? 'reserve-btn min-h-[38px] whitespace-nowrap rounded-[13px] border-0 bg-gradient-to-br from-[#6ed6b5] to-[#9ae8d1] px-3 font-black text-white shadow-mintButton transition hover:-translate-y-px'
+        : 'reserve-btn min-h-[38px] whitespace-nowrap rounded-[13px] border-0 bg-gradient-to-br from-coral to-[#f7a07a] px-3 font-black text-white shadow-[0_4px_0_#c9603a,0_7px_15px_rgba(244,132,95,.24)] transition hover:-translate-y-px hover:shadow-[0_5px_0_#c9603a,0_10px_18px_rgba(244,132,95,.3)]';
+
+      return `
+        <article class="grid min-h-[222px] grid-rows-[auto_1fr_auto] gap-2.5 rounded-[18px] border-2 border-[#b8e8f5] bg-gradient-to-br from-white to-[#f3fdff] p-3.5 shadow-[0_5px_16px_rgba(0,119,182,.09)]">
+          <div class="flex items-center justify-between gap-2.5">
+            <span class="grid h-[46px] w-[46px] place-items-center rounded-[15px] bg-gradient-to-br from-sand to-[#fff8e8] shadow-[0_2px_7px_rgba(0,0,0,.06)]" aria-hidden="true"><svg class="h-[25px] w-[25px] fill-none stroke-ocean stroke-2"><use href="#icon-${gift.icon}"></use></svg></span>
+            <span class="whitespace-nowrap rounded-full bg-seafoam px-[9px] py-[5px] text-[.72rem] font-black uppercase tracking-[.04em] text-ocean">${gift.category}</span>
+          </div>
+          <div>
+            <h3 class="text-[1.03rem] font-extrabold leading-tight text-deep">${gift.name}</h3>
+            <p class="mt-2 text-sm font-bold leading-snug text-[#4a6c7d]">${gift.note}</p>
+          </div>
+          <div class="flex flex-col gap-2.5 min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between">
+            <span class="text-[1.1rem] font-black text-coral">${gift.price}</span>
+            <button class="${buttonClass}" type="button" data-index="${index}">
+              ${isReserved ? 'Reserved' : 'Reserve'}
+            </button>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderGifts() {
+      const term = searchInput.value.trim().toLowerCase();
+      const visible = gifts
+        .map((gift, index) => ({ gift, index }))
+        .filter(({ gift }) => activeFilter === 'all' || gift.category === activeFilter)
+        .filter(({ gift }) => `${gift.name} ${gift.category} ${gift.note}`.toLowerCase().includes(term));
+
+      giftGrid.innerHTML = visible.map(({ gift, index }) => giftCard(gift, index)).join('');
+      giftGrid.appendChild(emptyState);
+      emptyState.classList.toggle('hidden', visible.length !== 0);
+      totalItems.textContent = gifts.length;
+      reservedItems.textContent = reserved.size;
+    }
+
+    document.querySelectorAll('.filter-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach((item) => {
+          item.className = item === button ? activeFilterClass : baseFilterClass;
+        });
+        activeFilter = button.dataset.filter;
+        renderGifts();
+      });
+    });
+
+    searchInput.addEventListener('input', renderGifts);
+
+    giftGrid.addEventListener('click', (event) => {
+      const button = event.target.closest('.reserve-btn');
+      if (!button) return;
+      const index = Number(button.dataset.index);
+      if (reserved.has(index)) {
+        reserved.delete(index);
+      } else {
+        reserved.add(index);
+      }
+      renderGifts();
+    });
+
+    document.querySelectorAll('.radio-option input').forEach((input) => {
+      input.addEventListener('change', () => {
+        document.querySelectorAll('.radio-option').forEach((label) => {
+          label.className = label.querySelector('input').checked ? selectedRadioClass : baseRadioClass;
+        });
+      });
+    });
+
+    document.querySelectorAll('.check-option input').forEach((input) => {
+      input.addEventListener('change', () => {
+        input.closest('.check-option').className = input.checked ? selectedCheckClass : baseCheckClass;
+      });
+    });
+
+    const HAPPY_SRC = 'https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json';
+    const CRY_SRC = 'https://fonts.gstatic.com/s/e/notoemoji/latest/1f62d/lottie.json';
+    const IDLE_SRC = 'https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json';
+
+    const player = document.getElementById('babyPlayer');
+    const stage = document.getElementById('babyStage');
+    const label = document.getElementById('babyLabel');
+    const bubble = document.getElementById('speechBubble');
+
+    function setBaby(mode) {
+      stage.classList.remove('text-[#2a9d5c]', 'text-[#e63946]');
+      bubble.classList.add('hidden');
+      bubble.classList.remove('block', 'bg-[#d4f7e5]', 'text-[#1a6640]', 'bg-[#ffe0e0]', 'text-[#b91c1c]');
+
+      if (mode === 'happy') {
+        player.load(HAPPY_SRC);
+        player.play();
+        label.textContent = 'Yay! Baby is SO excited to meet you!';
+        label.className = 'min-h-7 text-center font-pacifico text-base text-[#2a9d5c]';
+        bubble.textContent = 'Yay! See you there!';
+        bubble.classList.remove('hidden');
+        bubble.classList.add('block', 'bg-[#d4f7e5]', 'text-[#1a6640]');
+      } else if (mode === 'sad') {
+        player.load(CRY_SRC);
+        player.play();
+        label.textContent = 'Aww... baby will miss you!';
+        label.className = 'min-h-7 text-center font-pacifico text-base text-[#e63946]';
+        bubble.textContent = 'Nooo, please come!';
+        bubble.classList.remove('hidden');
+        bubble.classList.add('block', 'bg-[#ffe0e0]', 'text-[#b91c1c]');
+      } else {
+        player.load(IDLE_SRC);
+        player.play();
+        label.textContent = 'Will you come celebrate?';
+        label.className = 'min-h-7 text-center font-pacifico text-base text-ocean';
+      }
+    }
+
+    document.getElementById('attendYes').addEventListener('change', () => setBaby('happy'));
+    document.getElementById('attendNo').addEventListener('change', () => setBaby('sad'));
+
+    document.getElementById('rsvpForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      this.classList.add('hidden');
+      document.getElementById('thankyou').classList.remove('hidden');
+      setBaby('happy');
+    });
+
+    renderGifts();
+  </script>
+</body>
+</html>
