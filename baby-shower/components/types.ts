@@ -1,0 +1,32 @@
+export interface Gift {
+  name: string;
+  category: string;
+  price: string;
+  icon: string;
+  note: string;
+  reserved: boolean;
+}
+
+export interface RSVP {
+  firstName: string;
+  lastName: string;
+  attending: boolean;
+  guests: number;
+  diet: string[];
+  arrivalTime?: string;
+  reservedGift?: string;
+}
+
+export interface Details {
+  date: string;
+  theme: string;
+  place: string;
+}
+
+export interface Floater {
+  left: string;
+  duration: string;
+  delay: string;
+  size: string;
+  icon: string;
+}
