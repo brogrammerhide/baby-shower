@@ -24,7 +24,9 @@ export const GiftForm: React.FC<GiftFormProps> = ({
     price: '',
     category: 'nursery',
     note: '',
-    icon: 'wave'
+    icon: 'wave',
+    url: '',
+    imageUrl: ''
   });
 
   useEffect(() => {
@@ -35,10 +37,12 @@ export const GiftForm: React.FC<GiftFormProps> = ({
         price: initialGift.price,
         category: initialGift.category,
         note: initialGift.note || '',
-        icon: initialGift.icon
+        icon: initialGift.icon,
+        url: initialGift.url || '',
+        imageUrl: initialGift.imageUrl || ''
       });
     } else {
-      setForm({ name: '', price: '', category: 'nursery', note: '', icon: 'wave' });
+      setForm({ name: '', price: '', category: 'nursery', note: '', icon: 'wave', url: '', imageUrl: '' });
     }
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [initialGift]);
@@ -84,6 +88,22 @@ export const GiftForm: React.FC<GiftFormProps> = ({
           value={form.note}
           onChange={(e) => setForm({...form, note: e.target.value})}
         />
+        <FormField 
+          label="Shopping URL" id="giftUrl" placeholder="https://amazon.com/..."
+          value={form.url}
+          onChange={(e) => setForm({...form, url: e.target.value})}
+        />
+        <FormField 
+          label="Product Image URL" id="giftImageUrl" placeholder="https://.../image.png"
+          value={form.imageUrl}
+          onChange={(e) => setForm({...form, imageUrl: e.target.value})}
+        />
+        {form.imageUrl && (
+          <div className="mt-2 rounded-xl overflow-hidden border-2 border-ocean/10 bg-white p-1 shadow-soft w-32 aspect-square">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={form.imageUrl} alt="Preview" className="w-full h-full object-cover rounded-lg" />
+          </div>
+        )}
         <div>
           <label className="block text-xs font-extrabold text-[#497184] uppercase tracking-wider mb-1.5">Choose Icon</label>
           <div className="grid grid-cols-6 gap-2 bg-gradient-to-br from-seafoam/50 to-white p-2.5 rounded-xl border border-ocean/10">

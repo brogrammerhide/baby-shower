@@ -133,7 +133,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
     <motion.div variants={containerVariants} initial="hidden" animate="visible">
       <motion.div variants={itemVariants} className="mb-5 flex flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="text-center sm:text-left">
-          <h2 className="font-pacifico text-[clamp(1.65rem,5vw,2.3rem)] leading-tight text-ocean">Kindly RSVP</h2>
+          <h2 className="font-pacifico text-[clamp(1.65rem,5vw,2.3rem)] leading-tight text-ocean mb-4.5">Kindly RSVP</h2>
           <p className="max-w-[420px] font-bold leading-normal text-[#315566]">Please let us know if you can make it to our beachy July celebration.</p>
         </div>
         <Button variant="seafoam" onClick={() => setIsLookupModalOpen(true)} className="whitespace-nowrap shadow-soft">

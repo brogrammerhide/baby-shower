@@ -49,7 +49,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ details, isEditPage = false })
           <Icon name="sun" className="h-[34px] w-[34px] fill-none stroke-current stroke-2" />
           <Icon name="fish" className="h-[34px] w-[34px] fill-none stroke-current stroke-2" />
         </span>
-        <h1 className="mb-2.5 font-pacifico text-[clamp(2rem,7vw,3.05rem)] leading-[1.05] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,.15)]">Baby Shower!</h1>
+        <h1 className="mb-4.5 font-pacifico text-[clamp(2rem,7vw,3.05rem)] leading-[1.05] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,.15)]">Baby Shower!👶</h1>
         <p className="text-base font-extrabold leading-normal text-[#eefcff]">Celebrating our little summer boy, arriving in July.</p>
       </div>
 

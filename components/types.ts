@@ -5,6 +5,8 @@ export interface Gift {
   icon: string;
   note: string;
   reserved: boolean;
+  url?: string;
+  imageUrl?: string;
 }
 
 export interface RSVP {

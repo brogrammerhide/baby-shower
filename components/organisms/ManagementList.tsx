@@ -66,14 +66,28 @@ export const ManagementList: React.FC<ManagementListProps> = ({
                     className="flex items-center justify-between gap-3 p-3 bg-white rounded-xl border border-ocean/10 shadow-soft hover:shadow-md transition"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-sand to-[#fff8e8]" aria-hidden="true">
-                        <Icon name={gift.icon} className="h-6 w-6 stroke-ocean stroke-2 fill-none" />
+                      <span className="grid h-10 w-10 overflow-hidden place-items-center rounded-lg bg-gradient-to-br from-sand to-[#fff8e8]">
+                        {gift.imageUrl ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img src={gift.imageUrl} alt="" className="h-full w-full object-cover" />
+                        ) : (
+                          <Icon name={gift.icon} className="h-6 w-6 stroke-ocean stroke-2 fill-none" />
+                        )}
                       </span>
                       <div>
+
                         <h3 className="text-sm font-extrabold leading-snug text-deep">{gift.name}</h3>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-xs font-extrabold text-[#497184] uppercase tracking-wider">{gift.category}</span>
                           <span className="text-xs font-black text-coral">{gift.price}</span>
+                          {gift.url && (
+                            <a href={gift.url} target="_blank" rel="noopener noreferrer" className="text-ocean hover:text-coral transition-colors">
+                              <svg className="h-3 w-3 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                              </svg>
+                            </a>
+                          )}
                         </div>
                       </div>
                     </div>
