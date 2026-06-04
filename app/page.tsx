@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Details, Gift, RSVP } from '../components/types';
 import { BaseLayout } from '../components/templates/BaseLayout';
 import { PageTemplate } from '../components/templates/PageTemplate';
@@ -32,35 +32,20 @@ const DEFAULT_GIFTS: Gift[] = [
 ];
 
 export default function Home() {
-  const [details, setDetails] = useState<Details>(DEFAULT_DETAILS);
+  const details: Details = DEFAULT_DETAILS;
   const [gifts, setGifts] = useState<Gift[]>(DEFAULT_GIFTS);
   const [rsvps, setRsvps] = useState<RSVP[]>([]);
   const [babyMode, setBabyMode] = useState<'idle' | 'happy' | 'sad'>('idle');
 
-  useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect */
-    const savedDetails = localStorage.getItem('baby_shower_details');
-    if (savedDetails) setDetails(JSON.parse(savedDetails));
-
-    const savedGifts = localStorage.getItem('baby_shower_gifts');
-    if (savedGifts) setGifts(JSON.parse(savedGifts));
-
-    const savedRsvps = localStorage.getItem('baby_shower_rsvps');
-    if (savedRsvps) setRsvps(JSON.parse(savedRsvps));
-    /* eslint-enable react-hooks/set-state-in-effect */
-  }, []);
 
   const handleRsvpSubmit = (newRsvp: RSVP) => {
-    const updatedRsvps = [...rsvps, newRsvp];
-    setRsvps(updatedRsvps);
-    localStorage.setItem('baby_shower_rsvps', JSON.stringify(updatedRsvps));
+    setRsvps((prev) => [...prev, newRsvp]);
   };
 
   const toggleGiftReservation = (index: number) => {
-    const updatedGifts = [...gifts];
-    updatedGifts[index].reserved = !updatedGifts[index].reserved;
-    setGifts(updatedGifts);
-    localStorage.setItem('baby_shower_gifts', JSON.stringify(updatedGifts));
+    setGifts((prev) =>
+      prev.map((g, i) => (i === index ? { ...g, reserved: !g.reserved } : g))
+    );
   };
 
   return (
@@ -76,12 +61,12 @@ export default function Home() {
         }
         content={
           <>
-            <RSVPForm 
-              rsvps={rsvps} 
-              onRsvpSubmit={handleRsvpSubmit} 
-              onBabyModeChange={setBabyMode} 
+            <RSVPForm
+              rsvps={rsvps}
+              onRsvpSubmit={handleRsvpSubmit}
+              onBabyModeChange={setBabyMode}
             />
-            
+
             <div className="relative my-9 flex items-center justify-center">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
                 <div className="w-full border-t-2 border-dashed border-[#b8e8f5]"></div>
@@ -89,11 +74,11 @@ export default function Home() {
               <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-soft text-ocean border-2 border-[#b8e8f5]">
                 <Icon name="shell" className="h-[20px] w-[20px] fill-none stroke-current stroke-2" />
               </div>
-            </div>
+            </div>no,
 
-            <RegistryGrid 
-              gifts={gifts} 
-              onToggleReservation={toggleGiftReservation} 
+            <RegistryGrid
+              gifts={gifts}
+              onToggleReservation={toggleGiftReservation}
             />
           </>
         }

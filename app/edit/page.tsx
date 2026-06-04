@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Details, Gift, RSVP } from '../../components/types';
 import { BaseLayout } from '../../components/templates/BaseLayout';
@@ -36,59 +36,36 @@ export default function EditPage() {
   const [rsvps, setRsvps] = useState<RSVP[]>([]);
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
-  useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect */
-    const savedDetails = localStorage.getItem('baby_shower_details');
-    if (savedDetails) setDetails(JSON.parse(savedDetails));
-
-    const savedGifts = localStorage.getItem('baby_shower_gifts');
-    if (savedGifts) setGifts(JSON.parse(savedGifts));
-
-    const savedRsvps = localStorage.getItem('baby_shower_rsvps');
-    if (savedRsvps) setRsvps(JSON.parse(savedRsvps));
-    /* eslint-enable react-hooks/set-state-in-effect */
-  }, []);
-
   const handleDetailsSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('baby_shower_details', JSON.stringify(details));
     alert('Shower details saved successfully!');
   };
 
   const handleGiftSubmit = (gift: Gift, index: number | null) => {
-    let updatedGifts;
     if (index !== null) {
-      updatedGifts = [...gifts];
-      updatedGifts[index] = gift;
+      setGifts((prev) => prev.map((g, i) => (i === index ? gift : g)));
       setEditIndex(null);
     } else {
-      updatedGifts = [...gifts, gift];
+      setGifts((prev) => [...prev, gift]);
     }
-    setGifts(updatedGifts);
-    localStorage.setItem('baby_shower_gifts', JSON.stringify(updatedGifts));
   };
 
   const deleteGift = (index: number) => {
     if (confirm(`Are you sure you want to delete "${gifts[index].name}"?`)) {
-      const updatedGifts = gifts.filter((_, i) => i !== index);
-      setGifts(updatedGifts);
-      localStorage.setItem('baby_shower_gifts', JSON.stringify(updatedGifts));
+      setGifts((prev) => prev.filter((_, i) => i !== index));
       if (editIndex === index) setEditIndex(null);
     }
   };
 
   const toggleReservation = (index: number) => {
-    const updatedGifts = [...gifts];
-    updatedGifts[index].reserved = !updatedGifts[index].reserved;
-    setGifts(updatedGifts);
-    localStorage.setItem('baby_shower_gifts', JSON.stringify(updatedGifts));
+    setGifts((prev) =>
+      prev.map((g, i) => (i === index ? { ...g, reserved: !g.reserved } : g))
+    );
   };
 
   const deleteGuest = (index: number) => {
     if (confirm(`Delete RSVP for ${rsvps[index].firstName} ${rsvps[index].lastName}?`)) {
-      const updatedRsvps = rsvps.filter((_, i) => i !== index);
-      setRsvps(updatedRsvps);
-      localStorage.setItem('baby_shower_rsvps', JSON.stringify(updatedRsvps));
+      setRsvps((prev) => prev.filter((_, i) => i !== index));
     }
   };
 

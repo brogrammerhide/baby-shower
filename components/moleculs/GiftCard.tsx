@@ -43,21 +43,19 @@ export const GiftCard: React.FC<GiftCardProps> = ({ gift, onToggle }) => {
       </div>
       
       <div className="mt-6 flex items-center gap-2">
-        {gift.url && (
-          <a 
-            href={gift.url} 
-            target="_blank" 
+          <a
+            href={gift.url || "https://www.amazon.ca"}
+            target="_blank"
             rel="noopener noreferrer"
             className="flex-1 flex"
           >
-            <Button 
+            <Button
               variant="transparent"
-              className="w-full !py-2.5 !bg-sun/20 !text-deep hover:!bg-sun border-2 border-sun/30"
+              className="w-full !py-2.5 !bg-sun/20 !text-deep hover:!bg-sun border-2 border-sun/30 text-sm"
             >
               Amazon
             </Button>
           </a>
-        )}
         <Button 
           variant={gift.reserved ? 'mint' : 'coral'} 
           onClick={onToggle}
