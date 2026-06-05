@@ -21,6 +21,7 @@ export function toGift(doc: Record<string, unknown>): Gift {
     icon: String(doc.icon ?? ''),
     note: doc.note ? String(doc.note) : undefined,
     reserved: Boolean(doc.reserved),
+    reservedCount: doc.reservedCount != null ? Number(doc.reservedCount) : undefined,
     url: doc.url ? String(doc.url) : undefined,
     imageUrl: doc.imageUrl ? String(doc.imageUrl) : undefined,
   };

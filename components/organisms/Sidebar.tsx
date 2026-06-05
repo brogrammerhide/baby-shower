@@ -52,6 +52,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ details }) => {
         <motion.div variants={itemVariants}><InfoRow icon="calendar" label="Date" value={details.date} /></motion.div>
         <motion.div variants={itemVariants}><InfoRow icon="umbrella" label="Theme" value={details.theme} /></motion.div>
         <motion.div variants={itemVariants}><InfoRow icon="pin" label="Place" value={details.place} onClick={copyAddress} title="Click to copy address" /></motion.div>
+        
+        <motion.div variants={itemVariants} className="mt-2.5 overflow-hidden rounded-[20px] border-2 border-[#b8e8f5] shadow-soft">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img 
+            src="/i_want_you_final.png" 
+            alt="Baby face poster" 
+            className="w-full h-auto object-cover transition-transform hover:scale-105 duration-500"
+          />
+        </motion.div>
       </motion.div>
     </section>
   );

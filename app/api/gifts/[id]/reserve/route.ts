@@ -31,20 +31,6 @@ export async function PATCH(
     }
 
     if (action === 'reserve') {
-      if (!rsvp.attending) {
-        return NextResponse.json({ error: 'Only attending guests can reserve gifts' }, { status: 400 });
-      }
-
-      const matchingRsvps = await getRSVPsWithReservedGift(id);
-      const alreadyReserved = matchingRsvps.some((match) => match.id !== rsvpId);
-
-      if (alreadyReserved) {
-        return NextResponse.json(
-          { error: 'This gift has already been reserved by another guest' },
-          { status: 400 }
-        );
-      }
-
       const existingReserved = rsvp.reservedGifts || [];
       if (!existingReserved.includes(id)) {
         await updateReservedGifts(rsvpId, [...existingReserved, id]);

@@ -111,7 +111,7 @@ export async function submitRSVP(data: {
     diet: data.diet || [],
     otherDietNotes: data.otherDiet || '',
     estimateArrivalTime: data.attending ? data.estimateArrivalTime || '' : '',
-    reservedGifts: data.attending ? existing?.reservedGifts || [] : [],
+    reservedGifts: existing?.reservedGifts || [],
     createdAt: existing?.createdAt || now,
     updatedAt: now,
   };

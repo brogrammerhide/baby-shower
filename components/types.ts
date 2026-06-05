@@ -5,6 +5,7 @@ export interface Gift {
   icon: string;
   note?: string;
   reserved: boolean;
+  reservedCount?: number;
   url?: string;
   imageUrl?: string;
 }

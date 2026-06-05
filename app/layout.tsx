@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito, Pacifico } from "next/font/google";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./globals.css";
 
 const nunito = Nunito({
@@ -53,6 +55,7 @@ export default function RootLayout({
           </defs>
         </svg>
         {children}
+        <ToastContainer position="bottom-right" theme="colored" />
       </body>
     </html>
   );

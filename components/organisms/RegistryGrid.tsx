@@ -61,12 +61,12 @@ export const RegistryGrid: React.FC<RegistryGridProps> = ({ gifts, onToggleReser
       <div className="mb-4 grid items-center gap-2.5 sm:grid-cols-[minmax(0,1fr)_auto]">
         <Input 
           type="search" 
-          placeholder="Search gifts or notes" 
+          placeholder="Search gifts..." 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <div className="flex flex-wrap justify-start gap-[7px] sm:justify-end">
-          {['all', 'nursery', 'beach', 'feeding', 'care'].map((filter) => (
+          {['all', 'feeding', 'care', 'sleep'].map((filter) => (
             <FilterButton 
               key={filter} 
               label={filter} 

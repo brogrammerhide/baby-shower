@@ -16,17 +16,17 @@ export const GiftCard: React.FC<GiftCardProps> = ({ gift, onToggle }) => {
           <span className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-sand to-[#fff8e8] shadow-soft transition-transform group-hover:scale-110">
             <Icon name={gift.icon} className="h-8 w-8 fill-none stroke-ocean stroke-2" />
           </span>
-          {gift.reserved && (
+          {gift.reservedCount && gift.reservedCount > 0 ? (
             <div className="absolute -top-2 -right-2 bg-coral text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm animate-pop-in">
-              STAYED
+              {gift.reservedCount} {gift.reservedCount === 1 ? 'RESERVED' : 'RESERVED'}
             </div>
-          )}
+          ) : null}
         </div>
         <div className="flex-1 min-w-0">
           <span className="inline-block text-[10px] font-black uppercase tracking-widest text-ocean/50 bg-seafoam/50 px-2 py-0.5 rounded-md mb-1">
             {gift.category}
           </span>
-          <h3 className="text-[1.1rem] font-extrabold leading-tight text-deep truncate transition-colors group-hover:text-ocean">
+          <h3 className="text-[1.1rem] font-extrabold leading-tight text-deep transition-colors group-hover:text-ocean">
             {gift.name}
           </h3>
         </div>

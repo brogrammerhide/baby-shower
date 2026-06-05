@@ -114,7 +114,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
           <p>Attending: {exact.attending ? 'Yes' : 'No'}</p>
           <p>Guests: {exact.guests}</p>
           <p>Diet: {exact.diet.join(', ') || 'None'}</p>
-          <p>Reserved gifts: {exact.reservedGifts?.join(', ') || 'None'}</p>
+          {/* <p>Reserved gifts: {exact.reservedGifts?.join(', ') || 'None'}</p> */}
           <Button onClick={() => fillFormFromRsvp(exact)} className="mt-2 w-full !py-1 !font-pacifico">
             Edit My RSVP
           </Button>
@@ -187,9 +187,9 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
             ? 'Thanks so much for your RSVP. We cannot wait to celebrate this July baby boy with you.'
             : 'We are sorry you cannot make it. We hope to see you another time soon.'}
         </p>
-        <button onClick={() => setShowThankYou(false)} className="mt-6 text-ocean font-bold underline cursor-pointer">
+        {/* <button onClick={() => setShowThankYou(false)} className="mt-6 text-ocean font-bold underline cursor-pointer">
           Send another RSVP
-        </button>
+        </button> */}
       </motion.div>
     );
   }

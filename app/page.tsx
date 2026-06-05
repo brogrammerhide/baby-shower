@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { useFetch } from './hooks/useFetch';
 import { toGifts } from './lib/apiMappers';
 import { DEFAULT_DETAILS, DEFAULT_GIFTS } from './lib/defaults';
@@ -13,13 +14,12 @@ import { RegistryGrid } from '../components/organisms/RegistryGrid';
 import { Icon } from '../components/atoms/Icon';
 
 export default function Home() {
-  const { data: giftsData, mutate: mutateGifts } = useFetch('/api/gifts');
+  const [rsvpId, setRsvpId] = useState<string | null>(null);
+  const { data: giftsData, mutate: mutateGifts } = useFetch(`/api/gifts${rsvpId ? `?rsvpId=${encodeURIComponent(rsvpId)}` : ''}`);
+  const [babyMode, setBabyMode] = useState<'idle' | 'happy' | 'sad'>('happy');
 
   const details = DEFAULT_DETAILS;
   const gifts = giftsData ? toGifts(giftsData) : DEFAULT_GIFTS;
-
-  const [rsvpId, setRsvpId] = useState<string | null>(null);
-  const [babyMode, setBabyMode] = useState<'idle' | 'happy' | 'sad'>('idle');
 
   const toggleGiftReservation = async (index: number) => {
     const gift = gifts[index];
@@ -43,6 +43,7 @@ export default function Home() {
       return;
     }
 
+    toast.success(action === 'reserve' ? `${gift.name} reserved!` : `${gift.name} released!`);
     await mutateGifts();
   };
 

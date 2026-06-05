@@ -8,21 +8,27 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get('category') || undefined;
+    const rsvpId = searchParams.get('rsvpId') || undefined;
 
     const rsvps = await getAllRSVPs();
-    const reservedSet = new Set<string>();
+    const reservationCounts: Record<string, number> = {};
+    const personalReservations = new Set<string>();
 
     for (const rsvp of rsvps) {
       if (rsvp.reservedGifts) {
         for (const giftId of rsvp.reservedGifts) {
-          reservedSet.add(giftId);
+          reservationCounts[giftId] = (reservationCounts[giftId] || 0) + 1;
+          if (rsvpId && rsvp.id === rsvpId) {
+            personalReservations.add(giftId);
+          }
         }
       }
     }
 
     let gifts = DEFAULT_GIFTS.map((gift) => ({
       ...gift,
-      reserved: gift.id ? reservedSet.has(gift.id) : false,
+      reserved: gift.id ? personalReservations.has(gift.id) : false,
+      reservedCount: gift.id ? (reservationCounts[gift.id] || 0) : 0,
     }));
 
     if (category) {
