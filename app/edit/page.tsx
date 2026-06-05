@@ -1,71 +1,127 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Details, Gift, RSVP } from '../../components/types';
+import { Details, Gift } from '../../components/types';
+import { useFetch } from '../hooks/useFetch';
+import { toDetails, toGifts, toRsvps } from '../lib/apiMappers';
+import { DEFAULT_DETAILS, DEFAULT_GIFTS } from '../lib/defaults';
 import { BaseLayout } from '../../components/templates/BaseLayout';
 import { PageTemplate } from '../../components/templates/PageTemplate';
 import { DetailsForm } from '../../components/organisms/DetailsForm';
 import { GiftForm } from '../../components/organisms/GiftForm';
 import { ManagementList } from '../../components/organisms/ManagementList';
 
-const DEFAULT_DETAILS: Details = {
-  date: 'Sunday, July 13 at 12:30 PM',
-  theme: 'Summer beach, seafoam blues, coral, and sunshine',
-  place: 'Add your shower address here'
-};
-
-const DEFAULT_GIFTS: Gift[] = [
-  { name: 'Wave-Soft Swaddle Set', category: 'nursery', price: '$32', icon: 'wave', note: 'Light cotton muslin for warm July naps and stroller walks.', reserved: false, url: 'https://www.amazon.com/s?k=baby+swaddle+set' },
-  { name: 'Sea Glass Sound Machine', category: 'nursery', price: '$48', icon: 'moon', note: 'Ocean sounds and soft light for bedtime.', reserved: false, url: 'https://www.amazon.com/s?k=baby+sound+machine' },
-  { name: 'Palm Shade Stroller Fan', category: 'beach', price: '$29', icon: 'palm', note: 'Rechargeable fan for sunny walks and beach days.', reserved: false, url: 'https://www.amazon.com/s?k=stroller+fan' },
-  { name: 'Baby Beach Tent', category: 'beach', price: '$76', icon: 'tent', note: 'Portable shade for picnics, shore days, and backyard lounging.', reserved: false, url: 'https://www.amazon.com/s?k=baby+beach+tent' },
-  { name: 'Bottle Warmer', category: 'feeding', price: '$41', icon: 'bottle', note: 'Compact warmer for nighttime bottles and early mornings.', reserved: false, url: 'https://www.amazon.com/s?k=baby+bottle+warmer' },
-  { name: 'Ocean Bib Bundle', category: 'feeding', price: '$22', icon: 'bib', note: 'Soft waterproof bibs in shell, wave, and sailboat prints.', reserved: false, url: 'https://www.amazon.com/s?k=baby+bibs' },
-  { name: 'Newborn Diaper Caddy', category: 'care', price: '$35', icon: 'caddy', note: 'Keeps wipes, diapers, cream, and tiny socks in one place.', reserved: false, url: 'https://www.amazon.com/s?k=diaper+caddy' },
-  { name: 'Gentle Bath Kit', category: 'care', price: '$44', icon: 'bath', note: 'Wash, lotion, hooded towel, and brush for first baths.', reserved: false, url: 'https://www.amazon.com/s?k=baby+bath+kit' },
-  { name: 'Sandy Toes Play Mat', category: 'nursery', price: '$58', icon: 'star', note: 'Padded coastal-color mat for tummy time.', reserved: false, url: 'https://www.amazon.com/s?k=baby+play+mat' },
-  { name: 'UPF Swim Romper', category: 'beach', price: '$26', icon: 'shirt', note: 'Sun-safe baby swim layer for future splash days.', reserved: false, url: 'https://www.amazon.com/s?k=baby+swim+romper' },
-  { name: 'Burp Cloth Stack', category: 'feeding', price: '$18', icon: 'cloth', note: 'Absorbent everyday cloths in breezy blue and white.', reserved: false, url: 'https://www.amazon.com/s?k=burp+cloths' },
-  { name: 'Mini First Aid Pouch', category: 'care', price: '$24', icon: 'firstaid', note: 'Thermometer, nail file, medicine pacifier, and travel pouch.', reserved: false, url: 'https://www.amazon.com/s?k=baby+first+aid+kit' }
-];
-
 export default function EditPage() {
+  const { data: detailsData, mutate: mutateDetails } = useFetch('/api/details');
+  const { data: giftsData, mutate: mutateGifts } = useFetch('/api/gifts');
+  const { data: rsvpsData, mutate: mutateRsvps } = useFetch('/api/rsvp');
+
+  const gifts = giftsData ? toGifts(giftsData) : DEFAULT_GIFTS;
+  const rsvps = rsvpsData ? toRsvps(rsvpsData) : [];
+
   const [details, setDetails] = useState<Details>(DEFAULT_DETAILS);
-  const [gifts, setGifts] = useState<Gift[]>(DEFAULT_GIFTS);
-  const [rsvps, setRsvps] = useState<RSVP[]>([]);
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
-  const handleDetailsSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (detailsData) {
+      setDetails(toDetails(detailsData));
+    }
+  }, [detailsData]);
+
+  const handleDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const res = await fetch('/api/details', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(details),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      alert((err as { error?: string }).error || 'Failed to save details.');
+      return;
+    }
+    await mutateDetails();
     alert('Shower details saved successfully!');
   };
 
-  const handleGiftSubmit = (gift: Gift, index: number | null) => {
-    if (index !== null) {
-      setGifts((prev) => prev.map((g, i) => (i === index ? gift : g)));
-      setEditIndex(null);
-    } else {
-      setGifts((prev) => [...prev, gift]);
+  const handleGiftSubmit = async (gift: Gift, index: number | null) => {
+    const payload = {
+      name: gift.name,
+      category: gift.category,
+      price: gift.price,
+      icon: gift.icon,
+      note: gift.note,
+      url: gift.url,
+      imageUrl: gift.imageUrl,
+    };
+
+    const existingId = index !== null ? gifts[index]?.id : undefined;
+    const res = await fetch(existingId ? `/api/gifts/${existingId}` : '/api/gifts', {
+      method: existingId ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      alert((err as { error?: string }).error || 'Failed to save gift.');
+      return;
     }
+
+    await mutateGifts();
+    setEditIndex(null);
   };
 
-  const deleteGift = (index: number) => {
-    if (confirm(`Are you sure you want to delete "${gifts[index].name}"?`)) {
-      setGifts((prev) => prev.filter((_, i) => i !== index));
-      if (editIndex === index) setEditIndex(null);
+  const deleteGift = async (index: number) => {
+    const gift = gifts[index];
+    if (!gift || !confirm(`Are you sure you want to delete "${gift.name}"?`)) return;
+
+    if (gift.id) {
+      const res = await fetch(`/api/gifts/${gift.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        alert((err as { error?: string }).error || 'Failed to delete gift.');
+        return;
+      }
+      await mutateGifts();
     }
+
+    if (editIndex === index) setEditIndex(null);
+    else if (editIndex !== null && editIndex > index) setEditIndex(editIndex - 1);
   };
 
-  const toggleReservation = (index: number) => {
-    setGifts((prev) =>
-      prev.map((g, i) => (i === index ? { ...g, reserved: !g.reserved } : g))
-    );
+  const toggleReservation = async (index: number) => {
+    const gift = gifts[index];
+    if (!gift?.id) return;
+
+    const res = await fetch(`/api/gifts/${gift.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...gift, reserved: !gift.reserved }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      alert((err as { error?: string }).error || 'Failed to update reservation.');
+      return;
+    }
+
+    await mutateGifts();
   };
 
-  const deleteGuest = (index: number) => {
-    if (confirm(`Delete RSVP for ${rsvps[index].firstName} ${rsvps[index].lastName}?`)) {
-      setRsvps((prev) => prev.filter((_, i) => i !== index));
+  const deleteGuest = async (index: number) => {
+    const guest = rsvps[index];
+    if (!guest || !confirm(`Delete RSVP for ${guest.firstName} ${guest.lastName}?`)) return;
+
+    if (guest.id) {
+      const res = await fetch(`/api/rsvp/${guest.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        alert((err as { error?: string }).error || 'Failed to delete RSVP.');
+        return;
+      }
+      await mutateRsvps();
     }
   };
 
@@ -87,14 +143,14 @@ export default function EditPage() {
               </Link>
             </section>
 
-            <DetailsForm 
-              details={details} 
-              onDetailsChange={setDetails} 
-              onSubmit={handleDetailsSubmit} 
+            <DetailsForm
+              details={details}
+              onDetailsChange={setDetails}
+              onSubmit={handleDetailsSubmit}
             />
 
-            <GiftForm 
-              editIndex={editIndex} 
+            <GiftForm
+              editIndex={editIndex}
               initialGift={editIndex !== null ? gifts[editIndex] : undefined}
               onSubmit={handleGiftSubmit}
               onCancel={() => setEditIndex(null)}
@@ -103,17 +159,17 @@ export default function EditPage() {
         }
         content={
           <div className="grid gap-[22px] !p-0">
-            <ManagementList 
-              type="gifts" 
-              items={gifts} 
-              onEdit={setEditIndex} 
-              onDelete={deleteGift} 
-              onToggleReservation={toggleReservation} 
+            <ManagementList
+              type="gifts"
+              items={gifts}
+              onEdit={setEditIndex}
+              onDelete={deleteGift}
+              onToggleReservation={toggleReservation}
             />
-            <ManagementList 
-              type="guests" 
-              items={rsvps} 
-              onDelete={deleteGuest} 
+            <ManagementList
+              type="guests"
+              items={rsvps}
+              onDelete={deleteGuest}
             />
           </div>
         }

@@ -1,4 +1,5 @@
 export interface Gift {
+  id?: string;
   name: string;
   category: string;
   price: string;
@@ -10,6 +11,7 @@ export interface Gift {
 }
 
 export interface RSVP {
+  id?: string;
   firstName: string;
   lastName: string;
   attending: boolean;
@@ -17,6 +19,11 @@ export interface RSVP {
   diet: string[];
   arrivalTime?: string;
   reservedGift?: string;
+}
+
+export interface DietaryOption {
+  key: string;
+  label: string;
 }
 
 export interface Details {

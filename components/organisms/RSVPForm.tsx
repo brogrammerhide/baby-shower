@@ -1,14 +1,27 @@
+'use client';
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RSVP } from '../types';
+import { useFetch } from '../../app/hooks/useFetch';
+import { toDietaryOptions, toRsvp } from '../../app/lib/apiMappers';
+import { DietaryOption } from '../types';
 import { Icon } from '../atoms/Icon';
 import { Button } from '../atoms/Button';
 import { FormField } from '../moleculs/FormField';
 import { Modal } from '../moleculs/Modal';
 
+const FALLBACK_DIETARY: DietaryOption[] = [
+  { key: 'vegetarian', label: 'Vegetarian' },
+  { key: 'vegan', label: 'Vegan' },
+  { key: 'gluten-free', label: 'Gluten-free' },
+  { key: 'nut-allergy', label: 'Nut-allergy' },
+  { key: 'dairy-free', label: 'Dairy-free' },
+  { key: 'halal', label: 'Halal' },
+  { key: 'kosher', label: 'Kosher' },
+];
+
 interface RSVPFormProps {
-  rsvps: RSVP[];
-  onRsvpSubmit: (rsvp: RSVP) => void;
+  onRsvpSuccess?: (rsvpId: string) => void;
   onBabyModeChange: (mode: 'happy' | 'sad') => void;
 }
 
@@ -17,22 +30,26 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0 }
+  visible: { opacity: 1, y: 0 },
 };
 
-export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyModeChange }) => {
+export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeChange }) => {
+  const { data: dietaryData } = useFetch('/api/dietary');
+  const dietaryOptions = dietaryData ? toDietaryOptions(dietaryData) : FALLBACK_DIETARY;
+
   const [showThankYou, setShowThankYou] = useState(false);
   const [isLookupModalOpen, setIsLookupModalOpen] = useState(false);
-  const [lookupResult, setLookupResult] = useState<string | JSX.Element>('');
+  const [lookupResult, setLookupResult] = useState<string | React.ReactNode>('');
   const [lookupFirst, setLookupFirst] = useState('');
   const [lookupLast, setLookupLast] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -40,54 +57,73 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
     guests: 1,
     diet: [] as string[],
     otherDiet: '',
-    arrivalTime: ''
+    arrivalTime: '',
   });
 
-  const handleLookup = () => {
-    const fn = lookupFirst.trim().toLowerCase();
-    const ln = lookupLast.trim().toLowerCase();
+  const fillFormFromRsvp = (rsvp: ReturnType<typeof toRsvp>) => {
+    const dietKeys = rsvp.diet.filter((d) => dietaryOptions.some((o) => o.key === d));
+    const otherDiet = rsvp.diet.find((d) => !dietaryOptions.some((o) => o.key === d)) ?? '';
+
+    setFormData({
+      firstName: rsvp.firstName,
+      lastName: rsvp.lastName,
+      attending: rsvp.attending ? 'yes' : 'no',
+      guests: rsvp.guests,
+      diet: dietKeys,
+      otherDiet,
+      arrivalTime: rsvp.arrivalTime || '',
+    });
+    if (rsvp.id) onRsvpSuccess?.(rsvp.id);
+    setShowThankYou(false);
+    setIsLookupModalOpen(false);
+  };
+
+  const handleLookup = async () => {
+    const fn = lookupFirst.trim();
+    const ln = lookupLast.trim();
     if (!fn) {
       setLookupResult('Please enter first name.');
       return;
     }
 
-    if (ln) {
-      const exact = rsvps.find(r => r.firstName.toLowerCase() === fn && r.lastName.toLowerCase() === ln);
-      if (exact) {
-        setLookupResult(
-          <div className="space-y-1">
-            <p className="text-ocean">Found invitation for {exact.firstName} {exact.lastName}.</p>
-            <p>Attending: {exact.attending ? 'Yes' : 'No'}</p>
-            <p>Guests: {exact.guests}</p>
-            <p>Diet: {exact.diet.join(', ') || 'None'}</p>
-            <p>Reserved Gift: {exact.reservedGift || 'None'}</p>
-            <Button
-              onClick={() => {
-                setFormData({
-                  firstName: exact.firstName,
-                  lastName: exact.lastName,
-                  attending: exact.attending ? 'yes' : 'no',
-                  guests: exact.guests,
-                  diet: exact.diet,
-                  otherDiet: '',
-                  arrivalTime: exact.arrivalTime || ''
-                });
-                setShowThankYou(false);
-                setIsLookupModalOpen(false);
-              }}
-              className="mt-2 w-full !py-1 !font-pacifico"
-            >
-              Edit My RSVP
-            </Button>
-          </div>
-        );
-        return;
-      }
+    setLookupResult('');
+
+    const res = await fetch('/api/rsvp/lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: fn, lastName: ln || undefined }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      setLookupResult(
+        <p className="text-red-600">{(err as { error?: string }).error || 'Lookup failed.'}</p>
+      );
+      return;
     }
 
-    const firstMatches = rsvps.filter(r => r.firstName.toLowerCase() === fn);
-    if (firstMatches.length > 0) {
-      const names = firstMatches.map(r => `${r.firstName} ${r.lastName}`).join(', ');
+    const result = await res.json();
+
+    if (result.type === 'exact' && result.data) {
+      const exact = toRsvp(result.data);
+      setLookupResult(
+        <div className="space-y-1">
+          <p className="text-ocean">Found invitation for {exact.firstName} {exact.lastName}.</p>
+          <p>Attending: {exact.attending ? 'Yes' : 'No'}</p>
+          <p>Guests: {exact.guests}</p>
+          <p>Diet: {exact.diet.join(', ') || 'None'}</p>
+          <p>Reserved Gift: {exact.reservedGift || 'None'}</p>
+          <Button onClick={() => fillFormFromRsvp(exact)} className="mt-2 w-full !py-1 !font-pacifico">
+            Edit My RSVP
+          </Button>
+        </div>
+      );
+      return;
+    }
+
+    if (result.type === 'matches' && Array.isArray(result.data) && result.data.length > 0) {
+      const matches = result.data.map((d: unknown) => toRsvp(d as Record<string, unknown>));
+      const names = matches.map((r) => `${r.firstName} ${r.lastName}`).join(', ');
       setLookupResult(<p className="text-deep">We found the following: {names}. Is that you?</p>);
       return;
     }
@@ -95,19 +131,36 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
     setLookupResult(<p className="text-red-600">Invitation not found. Please contact the organizer.</p>);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newRsvp: RSVP = {
-      firstName: formData.firstName.trim(),
-      lastName: formData.lastName.trim(),
-      attending: formData.attending === 'yes',
-      guests: Number(formData.guests) || 1,
-      diet: formData.diet,
-      arrivalTime: formData.arrivalTime
-    };
-    if (formData.otherDiet) newRsvp.diet.push(formData.otherDiet);
+    setIsSubmitting(true);
 
-    onRsvpSubmit(newRsvp);
+    const res = await fetch('/api/rsvp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        attending: formData.attending === 'yes',
+        guests: Number(formData.guests) || 1,
+        diet: formData.diet,
+        otherDiet: formData.otherDiet || undefined,
+        arrivalTime: formData.arrivalTime,
+      }),
+    });
+
+    setIsSubmitting(false);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      alert((err as { error?: string }).error || 'Failed to submit RSVP.');
+      return;
+    }
+
+    const saved = await res.json();
+    const rsvp = toRsvp(saved);
+    if (rsvp.id) onRsvpSuccess?.(rsvp.id);
+
     setShowThankYou(true);
     onBabyModeChange('happy');
   };
@@ -141,19 +194,23 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
         </Button>
       </motion.div>
 
-      <Modal 
-        isOpen={isLookupModalOpen} 
-        onClose={() => setIsLookupModalOpen(false)} 
+      <Modal
+        isOpen={isLookupModalOpen}
+        onClose={() => setIsLookupModalOpen(false)}
         title="Find Your RSVP"
       >
         <div className="grid gap-3">
-          <FormField 
-            label="First Name" id="lookupFirst" placeholder="e.g. Alice"
+          <FormField
+            label="First Name"
+            id="lookupFirst"
+            placeholder="e.g. Alice"
             value={lookupFirst}
             onChange={(e) => setLookupFirst(e.target.value)}
           />
-          <FormField 
-            label="Last Name" id="lookupLast" placeholder="optional"
+          <FormField
+            label="Last Name"
+            id="lookupLast"
+            placeholder="optional"
             value={lookupLast}
             onChange={(e) => setLookupLast(e.target.value)}
           />
@@ -162,7 +219,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
           </Button>
           <AnimatePresence>
             {lookupResult && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mt-2 rounded-xl border border-ocean/10 bg-seafoam/30 p-3 text-sm text-deep overflow-hidden">
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-2 rounded-xl border border-ocean/10 bg-seafoam/30 p-3 text-sm text-deep overflow-hidden">
                 {lookupResult}
               </motion.div>
             )}
@@ -173,91 +230,119 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ rsvps, onRsvpSubmit, onBabyM
       <form onSubmit={handleSubmit}>
         <motion.div variants={itemVariants} className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
           <div className="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean">
-            <Icon name="flower" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" /> 
+            <Icon name="flower" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" />
             Your Info
           </div>
-          <FormField 
-            label="First Name" id="firstName" required placeholder="e.g. Alice"
+          <FormField
+            label="First Name"
+            id="firstName"
+            required
+            placeholder="e.g. Alice"
             value={formData.firstName}
-            onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
           />
-          <FormField 
-            label="Last Name" id="lastName" required placeholder="e.g. Smith" className="mt-2"
+          <FormField
+            label="Last Name"
+            id="lastName"
+            required
+            placeholder="e.g. Smith"
+            className="mt-2"
             value={formData.lastName}
-            onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
           />
         </motion.div>
 
         <motion.div variants={itemVariants} className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
           <div className="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean">
-            <Icon name="party" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" /> 
+            <Icon name="party" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" />
             Will you be joining us?
           </div>
           <div className="mb-3 grid gap-2.5">
             <label className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.attending === 'yes' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}>
-              <input 
-                className="h-[18px] w-[18px] accent-ocean" type="radio" name="attending" value="yes" 
+              <input
+                className="h-[18px] w-[18px] accent-ocean"
+                type="radio"
+                name="attending"
+                value="yes"
                 checked={formData.attending === 'yes'}
                 onChange={() => {
-                  setFormData({...formData, attending: 'yes'});
+                  setFormData({ ...formData, attending: 'yes' });
                   onBabyModeChange('happy');
                 }}
               />
               Yes, I&apos;ll be there!
             </label>
             <label className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.attending === 'no' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}>
-              <input 
-                className="h-[18px] w-[18px] accent-ocean" type="radio" name="attending" value="no"
+              <input
+                className="h-[18px] w-[18px] accent-ocean"
+                type="radio"
+                name="attending"
+                value="no"
                 checked={formData.attending === 'no'}
                 onChange={() => {
-                  setFormData({...formData, attending: 'no'});
+                  setFormData({ ...formData, attending: 'no' });
                   onBabyModeChange('sad');
                 }}
               />
               Sorry, I can&apos;t make it
             </label>
           </div>
-          <FormField 
-            label="Number of guests" id="guests" type="number" min="1" max="10"
+          <FormField
+            label="Number of guests"
+            id="guests"
+            type="number"
+            min="1"
+            max="10"
             value={formData.guests}
-            onChange={(e) => setFormData({...formData, guests: Number(e.target.value)})}
+            onChange={(e) => setFormData({ ...formData, guests: Number(e.target.value) })}
           />
-          <FormField 
-            label="Arrival Time" id="arrivalTime" type="time" required className="mt-2"
+          <FormField
+            label="Arrival Time"
+            id="arrivalTime"
+            type="time"
+            required
+            className="mt-2"
             value={formData.arrivalTime}
-            onChange={(e) => setFormData({...formData, arrivalTime: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, arrivalTime: e.target.value })}
           />
         </motion.div>
 
         <motion.div variants={itemVariants} className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
           <div className="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean">
-            <Icon name="watermelon" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" /> 
+            <Icon name="watermelon" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" />
             Dietary Restrictions
           </div>
           <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {['vegetarian', 'vegan', 'gluten-free', 'nut-allergy', 'dairy-free', 'halal', 'kosher'].map((diet) => (
-              <label key={diet} className={`flex cursor-pointer items-center gap-2 rounded-[10px] border-2 px-3 py-2 text-sm font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.diet.includes(diet) ? 'border-coral bg-[#fff0eb]' : 'border-[#b8e8f5] bg-white'}`}>
-                <input 
-                  className="h-4 w-4 accent-coral" type="checkbox" checked={formData.diet.includes(diet)}
+            {dietaryOptions.map((diet) => (
+              <label key={diet.key} className={`flex cursor-pointer items-center gap-2 rounded-[10px] border-2 px-3 py-2 text-sm font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.diet.includes(diet.key) ? 'border-coral bg-[#fff0eb]' : 'border-[#b8e8f5] bg-white'}`}>
+                <input
+                  className="h-4 w-4 accent-coral"
+                  type="checkbox"
+                  checked={formData.diet.includes(diet.key)}
                   onChange={(e) => {
-                    const newDiet = e.target.checked ? [...formData.diet, diet] : formData.diet.filter(d => d !== diet);
-                    setFormData({...formData, diet: newDiet});
+                    const newDiet = e.target.checked
+                      ? [...formData.diet, diet.key]
+                      : formData.diet.filter((d) => d !== diet.key);
+                    setFormData({ ...formData, diet: newDiet });
                   }}
-                /> 
-                {diet.charAt(0).toUpperCase() + diet.slice(1)}
+                />
+                {diet.label}
               </label>
             ))}
           </div>
-          <FormField 
-            label="Other notes" id="otherDiet" as="textarea" placeholder="Anything else we should know?"
+          <FormField
+            label="Other notes"
+            id="otherDiet"
+            as="textarea"
+            placeholder="Anything else we should know?"
             value={formData.otherDiet}
-            onChange={(e) => setFormData({...formData, otherDiet: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, otherDiet: e.target.value })}
           />
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Button type="submit" className="w-full !p-4 !font-pacifico !text-[1.15rem]">
-            Send my RSVP <Icon name="wave" className="ml-1.5 inline h-[22px] w-[22px] align-[-4px] fill-none stroke-current stroke-[2.4]" />
+          <Button type="submit" disabled={isSubmitting} className="w-full !p-4 !font-pacifico !text-[1.15rem]">
+            {isSubmitting ? 'Sending…' : 'Send my RSVP'} <Icon name="wave" className="ml-1.5 inline h-[22px] w-[22px] align-[-4px] fill-none stroke-current stroke-[2.4]" />
           </Button>
         </motion.div>
       </form>

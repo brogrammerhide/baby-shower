@@ -58,7 +58,7 @@ export const ManagementList: React.FC<ManagementListProps> = ({
                 return (
                   <motion.div 
                     layout
-                    key={gift.name + index}
+                    key={gift.id ?? gift.name + index}
                     variants={itemVariants}
                     initial="hidden"
                     animate="visible"
@@ -116,7 +116,7 @@ export const ManagementList: React.FC<ManagementListProps> = ({
                 return (
                   <motion.div 
                     layout
-                    key={rsvp.firstName + rsvp.lastName + index}
+                    key={rsvp.id ?? rsvp.firstName + rsvp.lastName + index}
                     variants={itemVariants}
                     initial="hidden"
                     animate="visible"
