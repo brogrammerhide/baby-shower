@@ -9,6 +9,7 @@ import { Icon } from '../atoms/Icon';
 import { Button } from '../atoms/Button';
 import { FormField } from '../moleculs/FormField';
 import { Modal } from '../moleculs/Modal';
+import { BabyAnimation } from './BabyAnimation';
 
 const FALLBACK_DIETARY: DietaryOption[] = [
   { key: 'vegetarian', label: 'Vegetarian' },
@@ -23,6 +24,7 @@ const FALLBACK_DIETARY: DietaryOption[] = [
 interface RSVPFormProps {
   onRsvpSuccess?: (rsvpId: string) => void;
   onBabyModeChange: (mode: 'happy' | 'sad') => void;
+  babyMode: 'idle' | 'happy' | 'sad';
 }
 
 const containerVariants = {
@@ -38,7 +40,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeChange }) => {
+export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeChange, babyMode }) => {
   const { data: dietaryData } = useFetch('/api/dietary');
   const dietaryOptions = dietaryData ? toDietaryOptions(dietaryData) : FALLBACK_DIETARY;
 
@@ -266,9 +268,12 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
         </motion.div>
 
         <motion.div variants={itemVariants} className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
-          <div className="mb-3.5 flex items-center gap-2 font-pacifico text-[1.05rem] text-ocean">
-            <Icon name="party" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" />
-            Will you be joining us?
+          <div className="mb-3.5 flex items-center justify-between gap-2 font-pacifico text-[1.05rem] text-ocean">
+            <div className="flex items-center gap-2">
+              <Icon name="party" className="h-[21px] w-[21px] fill-none stroke-coral stroke-[2.2]" />
+              Will you be joining us?
+            </div>
+            <BabyAnimation mode={babyMode} />
           </div>
           <div className="mb-3 grid gap-2.5">
             <label

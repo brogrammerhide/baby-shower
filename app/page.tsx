@@ -53,9 +53,6 @@ export default function Home() {
         sidebar={
           <div className="lg:sticky lg:top-0 grid gap-[22px]">
             <Sidebar details={details} />
-            <div className="overflow-hidden rounded-[28px] bg-white/90 shadow-card backdrop-blur-lg">
-              <BabyAnimation mode={babyMode} />
-            </div>
           </div>
         }
         content={
@@ -63,6 +60,7 @@ export default function Home() {
             <RSVPForm
               onRsvpSuccess={setRsvpId}
               onBabyModeChange={setBabyMode}
+              babyMode={babyMode}
             />
 
             <div className="relative my-9 flex items-center justify-center">
