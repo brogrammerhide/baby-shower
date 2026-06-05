@@ -29,9 +29,7 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
+    transition: { staggerChildren: 0.1 },
   },
 };
 
@@ -45,6 +43,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
   const dietaryOptions = dietaryData ? toDietaryOptions(dietaryData) : FALLBACK_DIETARY;
 
   const [showThankYou, setShowThankYou] = useState(false);
+  const [thankYouAttending, setThankYouAttending] = useState(true);
   const [isLookupModalOpen, setIsLookupModalOpen] = useState(false);
   const [lookupResult, setLookupResult] = useState<string | React.ReactNode>('');
   const [lookupFirst, setLookupFirst] = useState('');
@@ -53,12 +52,14 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    attending: 'yes',
+    attending: 'yes' as 'yes' | 'no',
     guests: 1,
     diet: [] as string[],
     otherDiet: '',
-    arrivalTime: '',
+    estimateArrivalTime: '',
   });
+
+  const isAttending = formData.attending === 'yes';
 
   const fillFormFromRsvp = (rsvp: ReturnType<typeof toRsvp>) => {
     const dietKeys = rsvp.diet.filter((d) => dietaryOptions.some((o) => o.key === d));
@@ -68,11 +69,12 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
       firstName: rsvp.firstName,
       lastName: rsvp.lastName,
       attending: rsvp.attending ? 'yes' : 'no',
-      guests: rsvp.guests,
+      guests: rsvp.attending ? Math.max(1, rsvp.guests) : 0,
       diet: dietKeys,
       otherDiet,
-      arrivalTime: rsvp.arrivalTime || '',
+      estimateArrivalTime: rsvp.estimateArrivalTime || '',
     });
+    onBabyModeChange(rsvp.attending ? 'happy' : 'sad');
     if (rsvp.id) onRsvpSuccess?.(rsvp.id);
     setShowThankYou(false);
     setIsLookupModalOpen(false);
@@ -112,7 +114,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
           <p>Attending: {exact.attending ? 'Yes' : 'No'}</p>
           <p>Guests: {exact.guests}</p>
           <p>Diet: {exact.diet.join(', ') || 'None'}</p>
-          <p>Reserved Gift: {exact.reservedGift || 'None'}</p>
+          <p>Reserved gifts: {exact.reservedGifts?.join(', ') || 'None'}</p>
           <Button onClick={() => fillFormFromRsvp(exact)} className="mt-2 w-full !py-1 !font-pacifico">
             Edit My RSVP
           </Button>
@@ -123,7 +125,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
 
     if (result.type === 'matches' && Array.isArray(result.data) && result.data.length > 0) {
       const matches = result.data.map((d: unknown) => toRsvp(d as Record<string, unknown>));
-      const names = matches.map((r) => `${r.firstName} ${r.lastName}`).join(', ');
+      const names = matches.map((r: any) => `${r.firstName} ${r.lastName}`).join(', ');
       setLookupResult(<p className="text-deep">We found the following: {names}. Is that you?</p>);
       return;
     }
@@ -135,17 +137,20 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
     e.preventDefault();
     setIsSubmitting(true);
 
+    const attending = formData.attending === 'yes';
+    const guests = attending ? Math.max(1, Number(formData.guests) || 1) : 0;
+
     const res = await fetch('/api/rsvp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
-        attending: formData.attending === 'yes',
-        guests: Number(formData.guests) || 1,
+        attending,
+        guests,
         diet: formData.diet,
         otherDiet: formData.otherDiet || undefined,
-        arrivalTime: formData.arrivalTime,
+        estimateArrivalTime: attending ? formData.estimateArrivalTime : undefined,
       }),
     });
 
@@ -161,8 +166,9 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
     const rsvp = toRsvp(saved);
     if (rsvp.id) onRsvpSuccess?.(rsvp.id);
 
+    setThankYouAttending(attending);
     setShowThankYou(true);
-    onBabyModeChange('happy');
+    onBabyModeChange(attending ? 'happy' : 'sad');
   };
 
   if (showThankYou) {
@@ -173,8 +179,14 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
           <Icon name="wave" className="h-[46px] w-[46px] fill-none stroke-current stroke-2" />
           <Icon name="sun" className="h-[46px] w-[46px] fill-none stroke-current stroke-2" />
         </div>
-        <h2 className="mb-2.5 font-pacifico text-[1.8rem] text-ocean">See you at the beach!</h2>
-        <p className="text-base font-bold leading-relaxed text-deep">Thanks so much for your RSVP. We cannot wait to celebrate this July baby boy with you.</p>
+        <h2 className="mb-2.5 font-pacifico text-[1.8rem] text-ocean">
+          {thankYouAttending ? 'See you at the beach!' : 'Thanks for letting us know'}
+        </h2>
+        <p className="text-base font-bold leading-relaxed text-deep">
+          {thankYouAttending
+            ? 'Thanks so much for your RSVP. We cannot wait to celebrate this July baby boy with you.'
+            : 'We are sorry you cannot make it. We hope to see you another time soon.'}
+        </p>
         <button onClick={() => setShowThankYou(false)} className="mt-6 text-ocean font-bold underline cursor-pointer">
           Send another RSVP
         </button>
@@ -194,11 +206,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
         </Button>
       </motion.div>
 
-      <Modal
-        isOpen={isLookupModalOpen}
-        onClose={() => setIsLookupModalOpen(false)}
-        title="Find Your RSVP"
-      >
+      <Modal isOpen={isLookupModalOpen} onClose={() => setIsLookupModalOpen(false)} title="Find Your RSVP">
         <div className="grid gap-3">
           <FormField
             label="First Name"
@@ -219,7 +227,12 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
           </Button>
           <AnimatePresence>
             {lookupResult && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-2 rounded-xl border border-ocean/10 bg-seafoam/30 p-3 text-sm text-deep overflow-hidden">
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-2 rounded-xl border border-ocean/10 bg-seafoam/30 p-3 text-sm text-deep overflow-hidden"
+              >
                 {lookupResult}
               </motion.div>
             )}
@@ -258,7 +271,9 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
             Will you be joining us?
           </div>
           <div className="mb-3 grid gap-2.5">
-            <label className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.attending === 'yes' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}>
+            <label
+              className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px ${formData.attending === 'yes' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}
+            >
               <input
                 className="h-[18px] w-[18px] accent-ocean"
                 type="radio"
@@ -266,13 +281,19 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
                 value="yes"
                 checked={formData.attending === 'yes'}
                 onChange={() => {
-                  setFormData({ ...formData, attending: 'yes' });
+                  setFormData({
+                    ...formData,
+                    attending: 'yes',
+                    guests: formData.guests < 1 ? 1 : formData.guests,
+                  });
                   onBabyModeChange('happy');
                 }}
               />
               Yes, I&apos;ll be there!
             </label>
-            <label className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.attending === 'no' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}>
+            <label
+              className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-2 px-3.5 py-2.5 text-[.95rem] font-extrabold shadow-soft transition hover:-translate-y-px ${formData.attending === 'no' ? 'border-ocean bg-seafoam' : 'border-[#b8e8f5] bg-white'}`}
+            >
               <input
                 className="h-[18px] w-[18px] accent-ocean"
                 type="radio"
@@ -280,7 +301,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
                 value="no"
                 checked={formData.attending === 'no'}
                 onChange={() => {
-                  setFormData({ ...formData, attending: 'no' });
+                  setFormData({ ...formData, attending: 'no', guests: 0 });
                   onBabyModeChange('sad');
                 }}
               />
@@ -291,20 +312,23 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
             label="Number of guests"
             id="guests"
             type="number"
-            min="1"
+            min={isAttending ? '1' : '0'}
             max="10"
-            value={formData.guests}
+            disabled={!isAttending}
+            value={isAttending ? formData.guests : 0}
             onChange={(e) => setFormData({ ...formData, guests: Number(e.target.value) })}
           />
-          <FormField
-            label="Arrival Time"
-            id="arrivalTime"
-            type="time"
-            required
-            className="mt-2"
-            value={formData.arrivalTime}
-            onChange={(e) => setFormData({ ...formData, arrivalTime: e.target.value })}
-          />
+          {isAttending && (
+            <FormField
+              label="Estimated arrival time"
+              id="estimateArrivalTime"
+              type="time"
+              required
+              className="mt-2"
+              value={formData.estimateArrivalTime}
+              onChange={(e) => setFormData({ ...formData, estimateArrivalTime: e.target.value })}
+            />
+          )}
         </motion.div>
 
         <motion.div variants={itemVariants} className="mb-5 rounded-[18px] border border-ocean/10 bg-gradient-to-br from-seafoam to-[#e0f7fa] px-[22px] py-5 shadow-soft">
@@ -314,7 +338,10 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
           </div>
           <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
             {dietaryOptions.map((diet) => (
-              <label key={diet.key} className={`flex cursor-pointer items-center gap-2 rounded-[10px] border-2 px-3 py-2 text-sm font-extrabold shadow-soft transition hover:-translate-y-px cursor-pointer ${formData.diet.includes(diet.key) ? 'border-coral bg-[#fff0eb]' : 'border-[#b8e8f5] bg-white'}`}>
+              <label
+                key={diet.key}
+                className={`flex cursor-pointer items-center gap-2 rounded-[10px] border-2 px-3 py-2 text-sm font-extrabold shadow-soft transition hover:-translate-y-px ${formData.diet.includes(diet.key) ? 'border-coral bg-[#fff0eb]' : 'border-[#b8e8f5] bg-white'}`}
+              >
                 <input
                   className="h-4 w-4 accent-coral"
                   type="checkbox"
@@ -342,7 +369,8 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
 
         <motion.div variants={itemVariants}>
           <Button type="submit" disabled={isSubmitting} className="w-full !p-4 !font-pacifico !text-[1.15rem]">
-            {isSubmitting ? 'Sending…' : 'Send my RSVP'} <Icon name="wave" className="ml-1.5 inline h-[22px] w-[22px] align-[-4px] fill-none stroke-current stroke-[2.4]" />
+            {isSubmitting ? 'Sending…' : 'Send my RSVP'}{' '}
+            <Icon name="wave" className="ml-1.5 inline h-[22px] w-[22px] align-[-4px] fill-none stroke-current stroke-[2.4]" />
           </Button>
         </motion.div>
       </form>

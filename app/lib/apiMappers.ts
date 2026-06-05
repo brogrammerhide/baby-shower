@@ -43,13 +43,22 @@ function dietaryKeys(doc: Record<string, unknown>): string[] {
     .filter((k): k is string => Boolean(k));
 }
 
-function reservedGiftLabel(doc: Record<string, unknown>): string | undefined {
-  const gift = doc.reservedGift;
-  if (!gift) return undefined;
-  if (typeof gift === 'object' && gift !== null && 'name' in gift) {
+function giftName(gift: unknown): string | null {
+  if (gift && typeof gift === 'object' && 'name' in gift) {
     return String((gift as { name: string }).name);
   }
-  return undefined;
+  return null;
+}
+
+function reservedGiftsLabels(doc: Record<string, unknown>): string[] {
+  const gifts = doc.reservedGifts;
+  if (Array.isArray(gifts) && gifts.length > 0) {
+    return gifts.map(giftName).filter((n): n is string => Boolean(n));
+  }
+
+  const legacy = doc.reservedGift;
+  const legacyName = giftName(legacy);
+  return legacyName ? [legacyName] : [];
 }
 
 export function toRsvp(doc: Record<string, unknown>): RSVP {
@@ -57,15 +66,22 @@ export function toRsvp(doc: Record<string, unknown>): RSVP {
   const other = doc.otherDietNotes ? String(doc.otherDietNotes) : '';
   if (other) diet.push(other);
 
+  const estimateArrivalTime =
+    doc.estimateArrivalTime != null
+      ? String(doc.estimateArrivalTime)
+      : doc.arrivalTime != null
+        ? String(doc.arrivalTime)
+        : undefined;
+
   return {
     id: docId(doc as { _id?: { toString(): string }; id?: string }),
     firstName: String(doc.firstName ?? ''),
     lastName: String(doc.lastName ?? ''),
     attending: Boolean(doc.attending),
-    guests: Number(doc.guests) || 1,
+    guests: doc.attending === false ? 0 : Number(doc.guests) || 1,
     diet,
-    arrivalTime: doc.arrivalTime ? String(doc.arrivalTime) : undefined,
-    reservedGift: reservedGiftLabel(doc),
+    estimateArrivalTime: estimateArrivalTime || undefined,
+    reservedGifts: reservedGiftsLabels(doc),
   };
 }
 

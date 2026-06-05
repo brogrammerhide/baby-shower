@@ -1,19 +1,11 @@
-import mongoose, { Schema, Document, Model, Types } from 'mongoose';
+# Auth
+currently we dont need auth at all
+delete them all for auth related code
 
-export interface IRSVP extends Document {
-  firstName: string;
-  lastName: string;
-  attending: boolean;
-  guests: number;
-  dietaryRestrictions: Types.ObjectId[];
-  otherDietNotes?: string;
-  estimateArrivalTime?: string;
-  reservedGifts: Types.ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const RSVPSchema = new Schema<IRSVP>(
+# Account not needed
+# Group is NOT needed
+# RSVP shcema as below
+```ts
   {
     firstName: {
       type: String,
@@ -33,7 +25,7 @@ const RSVPSchema = new Schema<IRSVP>(
     guests: {
       type: Number,
       required: [true, 'Number of guests is required'],
-      min: [0, 'Guest count cannot be negative'],
+      min: [1, 'Must have at least 1 attendee (the RSVP holder)'],
       default: 1,
     },
     dietaryRestrictions: [
@@ -52,18 +44,14 @@ const RSVPSchema = new Schema<IRSVP>(
       trim: true,
     },
     reservedGifts: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Gift',
-      },
-    ],
-  },
-  {
-    timestamps: true,
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Gift'
+        }
+    ]
   }
-);
+```
 
-RSVPSchema.index({ firstName: 1, lastName: 1 });
-
-export const RSVPModel: Model<IRSVP> =
-  mongoose.models.RSVP || mongoose.model<IRSVP>('RSVP', RSVPSchema);
+so in the form, if user selects NOT attending option, we will disable the number of the guess, or set to only zero
+also on the left side of animalation, I think it is using lott whatever?
+it used to be crying emoji animaiton when selecting not attending option but now its all check mark of animation ....

@@ -17,8 +17,8 @@ export interface RSVP {
   attending: boolean;
   guests: number;
   diet: string[];
-  arrivalTime?: string;
-  reservedGift?: string;
+  estimateArrivalTime?: string;
+  reservedGifts?: string[];
 }
 
 export interface DietaryOption {

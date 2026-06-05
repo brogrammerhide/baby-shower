@@ -6,6 +6,7 @@ interface FormFieldProps {
   id: string;
   as?: 'input' | 'textarea' | 'select';
   required?: boolean;
+  disabled?: boolean;
   placeholder?: string;
   value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;

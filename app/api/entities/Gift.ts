@@ -50,13 +50,13 @@ const GiftSchema = new Schema<IGift>(
       default: false,
     },
     reservationCount: { type: Number, default: 0 },
-    reservedBy: {
-      type: Schema.Types.ObjectId,
-      ref: 'RSVP',
-    },
-    reservedAt: {
-      type: Date,
-    },
+    // reservedBy: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'RSVP',
+    // },
+    // reservedAt: {
+    //   type: Date,
+    // },
     url: {
       type: String,
       trim: true,
@@ -72,8 +72,8 @@ const GiftSchema = new Schema<IGift>(
 );
 
 // Indexes for registry filtering and status checks
-GiftSchema.index({ category: 1 });
-GiftSchema.index({ reserved: 1 });
+// GiftSchema.index({ category: 1 });
+// GiftSchema.index({ reserved: 1 });
 
 export const Gift: Model<IGift> =
   mongoose.models.Gift || mongoose.model<IGift>('Gift', GiftSchema);

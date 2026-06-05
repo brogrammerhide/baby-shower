@@ -1,9 +1,9 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IDietary extends Document {
-  key: string; // e.g., 'vegetarian', 'vegan', 'gluten-free'
-  label: string; // e.g., 'Vegetarian', 'Vegan', 'Gluten-Free'
-  icon?: string; // e.g., '🌱', '🌰'
+  key: string;
+  label: string;
+  icon?: string;
 }
 
 const DietarySchema = new Schema<IDietary>({

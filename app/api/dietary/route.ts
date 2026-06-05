@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDietaryOptions, createDietaryOption } from '../services/dietaryService';
-// import { checkAuth } from '../services/authService';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,11 +17,6 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    // const admin = await checkAuth(req);
-    // if (!admin) {
-    //   return NextResponse.json({ error: 'Unauthorized access' }, { status: 401 });
-    // }
-
     const body = await req.json();
     if (!body.key || !body.label) {
       return NextResponse.json(

@@ -1,23 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllRSVPs, submitRSVP } from '../services/rsvpService';
-// import { checkAuth } from '../services/authService';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    // const admin = await checkAuth(req);
-    // if (!admin) {
-    //   return NextResponse.json({ error: 'Unauthorized access' }, { status: 401 });
-    // }
-
     const rsvps = await getAllRSVPs();
     return NextResponse.json(rsvps, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch RSVPs' },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch RSVPs';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -32,21 +24,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const attending = Boolean(body.attending);
+    const guests = attending ? Math.max(1, Number(body.guests) || 1) : 0;
+
     const rsvp = await submitRSVP({
       firstName: body.firstName,
       lastName: body.lastName,
-      attending: body.attending,
-      guests: Number(body.guests) || 1,
+      attending,
+      guests,
       diet: body.diet || [],
       otherDiet: body.otherDiet,
-      arrivalTime: body.arrivalTime,
+      estimateArrivalTime: body.estimateArrivalTime,
     });
 
     return NextResponse.json(rsvp, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Failed to submit RSVP' },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to submit RSVP';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
