@@ -325,10 +325,11 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
           />
           {isAttending && (
             <FormField
-              label="Estimated arrival time"
+              label="Estimated arrival time (12:00 - 16:00, leave blank if unknown 😸)"
               id="estimateArrivalTime"
               type="time"
-              required
+              min="12:00"
+              max="16:00"
               className="mt-2"
               value={formData.estimateArrivalTime}
               onChange={(e) => setFormData({ ...formData, estimateArrivalTime: e.target.value })}
