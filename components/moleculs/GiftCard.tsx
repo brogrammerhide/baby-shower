@@ -23,7 +23,6 @@ export const GiftCard: React.FC<GiftCardProps> = ({ gift, onToggle }) => {
             <h3 className="text-[1.05rem] font-extrabold leading-tight text-deep mt-0.5">{gift.name}</h3>
           </div>
         </div>
-        <span className="text-[1.25rem] font-black text-coral">{gift.price}</span>
       </div>
 
       <div className="flex gap-4 flex-1">
@@ -34,12 +33,14 @@ export const GiftCard: React.FC<GiftCardProps> = ({ gift, onToggle }) => {
               src={gift.imageUrl} 
               alt={gift.name} 
               className="h-full w-full object-cover" 
-            />
+              />
           </div>
         )}
-        <p className="text-sm font-bold leading-relaxed text-[#4a6c7d] line-clamp-4">
-          {gift.note}
-        </p>
+        {gift.note && (
+          <p className="text-sm font-bold leading-relaxed text-[#4a6c7d] line-clamp-4">
+            {gift.note}
+          </p>
+        )}
       </div>
       
       <div className="mt-6 flex items-center gap-2">

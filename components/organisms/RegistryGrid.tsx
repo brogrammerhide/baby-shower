@@ -33,7 +33,7 @@ export const RegistryGrid: React.FC<RegistryGridProps> = ({ gifts, onToggleReser
     .map((gift, index) => ({ gift, index }))
     .filter(({ gift }) => activeFilter === 'all' || gift.category === activeFilter)
     .filter(({ gift }) =>
-      `${gift.name} ${gift.category} ${gift.note}`.toLowerCase().includes(searchTerm.toLowerCase())
+      `${gift.name} ${gift.category} ${gift.note || ''}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   return (

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useFetch } from './hooks/useFetch';
-import { toDetails, toGifts } from './lib/apiMappers';
+import { toGifts } from './lib/apiMappers';
 import { DEFAULT_DETAILS, DEFAULT_GIFTS } from './lib/defaults';
 import { BaseLayout } from '../components/templates/BaseLayout';
 import { PageTemplate } from '../components/templates/PageTemplate';
@@ -13,10 +13,9 @@ import { RegistryGrid } from '../components/organisms/RegistryGrid';
 import { Icon } from '../components/atoms/Icon';
 
 export default function Home() {
-  const { data: detailsData } = useFetch('/api/details');
   const { data: giftsData, mutate: mutateGifts } = useFetch('/api/gifts');
 
-  const details = detailsData ? toDetails(detailsData) : DEFAULT_DETAILS;
+  const details = DEFAULT_DETAILS;
   const gifts = giftsData ? toGifts(giftsData) : DEFAULT_GIFTS;
 
   const [rsvpId, setRsvpId] = useState<string | null>(null);

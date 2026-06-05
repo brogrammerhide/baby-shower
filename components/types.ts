@@ -2,9 +2,8 @@ export interface Gift {
   id?: string;
   name: string;
   category: string;
-  price: string;
   icon: string;
-  note: string;
+  note?: string;
   reserved: boolean;
   url?: string;
   imageUrl?: string;

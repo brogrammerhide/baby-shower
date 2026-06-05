@@ -1,55 +1,85 @@
-import { connectToDatabase } from '../lib/db';
-import { RSVPModel } from '../entities/RSVP';
-import { Dietary } from '../entities/Dietary';
-import { Gift } from '../entities/Gift';
-import mongoose from 'mongoose';
+import { redis } from '../lib/upstashRedis';
 
-async function releaseGift(giftId: mongoose.Types.ObjectId) {
-  await Gift.findByIdAndUpdate(giftId, {
-    $set: { reserved: false },
-    $unset: { reservedBy: 1, reservedAt: 1 },
-    $inc: { reservationCount: -1 },
-  });
+type RsvpData = {
+  firstName: string;
+  lastName: string;
+  firstNameLower: string;
+  lastNameLower: string;
+  attending: boolean;
+  guests: number;
+  diet: string[];
+  otherDietNotes: string;
+  estimateArrivalTime: string;
+  reservedGifts: string[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+type RsvpRecord = RsvpData & { id: string };
+
+function normalizeNamePart(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
-async function releaseAllReservedGifts(rsvp: { reservedGifts?: mongoose.Types.ObjectId[] }) {
-  const ids = rsvp.reservedGifts ?? [];
-  for (const giftId of ids) {
-    await releaseGift(giftId);
-  }
+function rsvpId(firstName: string, lastName: string) {
+  return `rsvp:${normalizeNamePart(firstName)}:${normalizeNamePart(lastName)}`;
+}
+
+function mapRsvpDoc(data: RsvpRecord) {
+  return {
+    id: data.id,
+    firstName: data.firstName || '',
+    lastName: data.lastName || '',
+    attending: Boolean(data.attending),
+    guests: Number(data.guests || 0),
+    dietaryRestrictions: (data.diet || []).map((key: string) => ({ key })),
+    otherDietNotes: data.otherDietNotes || '',
+    estimateArrivalTime: data.estimateArrivalTime || '',
+    reservedGifts: data.reservedGifts || [],
+    createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+    updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date(),
+  };
+}
+
+async function fetchRsvpDocs() {
+  const keys = await redis.keys('rsvp:*');
+  if (keys.length === 0) return [];
+
+  const records = await Promise.all(keys.map((key) => redis.get<RsvpData>(key)));
+  return records
+    .map((record, index) => (record ? { id: keys[index], ...record } : null))
+    .filter((record): record is RsvpRecord => Boolean(record));
+}
+
+async function fetchRsvpDoc(id: string) {
+  const record = await redis.get<RsvpData>(id);
+  return record ? { id, ...record } : null;
 }
 
 export async function getAllRSVPs() {
-  await connectToDatabase();
-  return await RSVPModel.find({})
-    .populate('dietaryRestrictions')
-    .populate('reservedGifts')
-    .sort({ createdAt: -1 });
+  const docs = await fetchRsvpDocs();
+  return docs.map(mapRsvpDoc);
 }
 
 export async function lookupRSVP(firstName: string, lastName?: string) {
-  await connectToDatabase();
-  const searchFirst = firstName.trim();
-
+  const fnLower = firstName.trim().toLowerCase();
+  
   if (lastName) {
-    const searchLast = lastName.trim();
-    const exact = await RSVPModel.findOne({
-      firstName: { $regex: new RegExp(`^${searchFirst}$`, 'i') },
-      lastName: { $regex: new RegExp(`^${searchLast}$`, 'i') },
-    })
-      .populate('dietaryRestrictions')
-      .populate('reservedGifts');
-
-    if (exact) {
-      return { type: 'exact', data: exact };
+    const lnLower = lastName.trim().toLowerCase();
+    const doc = await fetchRsvpDoc(rsvpId(firstName, lastName));
+    if (doc?.firstNameLower === fnLower && doc.lastNameLower === lnLower) {
+      return { type: 'exact', data: mapRsvpDoc(doc) };
     }
   }
 
-  const matches = await RSVPModel.find({
-    firstName: { $regex: new RegExp(`^${searchFirst}$`, 'i') },
-  })
-    .populate('dietaryRestrictions')
-    .populate('reservedGifts');
+  const docs = await fetchRsvpDocs();
+  const matches = docs
+    .filter((doc) => doc.firstNameLower === fnLower)
+    .map(mapRsvpDoc);
 
   return { type: 'matches', data: matches };
 }
@@ -63,53 +93,68 @@ export async function submitRSVP(data: {
   otherDiet?: string;
   estimateArrivalTime?: string;
 }) {
-  await connectToDatabase();
-
   const fn = data.firstName.trim();
   const ln = data.lastName.trim();
   const guests = data.attending ? Math.max(1, data.guests) : 0;
+  const id = rsvpId(fn, ln);
+  const existingDoc = await fetchRsvpDoc(id);
+  const existing = existingDoc;
+  const now = new Date().toISOString();
 
-  const cleanDietKeys = data.diet.map((d) => d.toLowerCase().trim());
-  const resolvedDiets = await Dietary.find({ key: { $in: cleanDietKeys } });
-  const dietaryIds = resolvedDiets.map((d: { _id: mongoose.Types.ObjectId }) => d._id);
-
-  const query = {
-    firstName: { $regex: new RegExp(`^${fn}$`, 'i') },
-    lastName: { $regex: new RegExp(`^${ln}$`, 'i') },
-  };
-
-  const existing = await RSVPModel.findOne(query);
-
-  const updateData = {
+  const rsvpData: RsvpData = {
     firstName: fn,
     lastName: ln,
+    firstNameLower: fn.toLowerCase(),
+    lastNameLower: ln.toLowerCase(),
     attending: data.attending,
     guests,
-    dietaryRestrictions: dietaryIds,
+    diet: data.diet || [],
     otherDietNotes: data.otherDiet || '',
     estimateArrivalTime: data.attending ? data.estimateArrivalTime || '' : '',
+    reservedGifts: data.attending ? existing?.reservedGifts || [] : [],
+    createdAt: existing?.createdAt || now,
+    updatedAt: now,
   };
 
-  const rsvp = await RSVPModel.findOneAndUpdate(query, updateData, {
-    new: true,
-    upsert: true,
-    runValidators: true,
-  });
+  await redis.set(id, rsvpData);
 
-  if (!data.attending && (existing?.reservedGifts?.length || rsvp.reservedGifts?.length)) {
-    await releaseAllReservedGifts(rsvp);
-    rsvp.reservedGifts = [];
-    await rsvp.save();
-  }
-
-  return rsvp;
+  const finalDoc = await fetchRsvpDoc(id);
+  return mapRsvpDoc(finalDoc || { id, ...rsvpData });
 }
 
 export async function deleteRSVP(id: string) {
-  await connectToDatabase();
-  const rsvp = await RSVPModel.findById(id);
-  if (!rsvp) return null;
+  const doc = await fetchRsvpDoc(id);
+  if (!doc) return null;
 
-  await releaseAllReservedGifts(rsvp);
-  return await RSVPModel.findByIdAndDelete(id);
+  const data = mapRsvpDoc(doc);
+  await redis.del(id);
+  return data;
+}
+
+export async function getRSVPById(id: string) {
+  const doc = await fetchRsvpDoc(id);
+  return doc ? mapRsvpDoc(doc) : null;
+}
+
+export async function getRSVPsWithReservedGift(giftId: string) {
+  const docs = await fetchRsvpDocs();
+  return docs
+    .filter((doc) => doc.reservedGifts?.includes(giftId))
+    .map(mapRsvpDoc);
+}
+
+export async function updateReservedGifts(id: string, reservedGifts: string[]) {
+  const doc = await fetchRsvpDoc(id);
+  if (!doc) return null;
+
+  const nextData = {
+    ...doc,
+    reservedGifts,
+    updatedAt: new Date().toISOString(),
+  };
+  const { id: _id, ...record } = nextData;
+
+  await redis.set(id, record);
+
+  return mapRsvpDoc(nextData);
 }
