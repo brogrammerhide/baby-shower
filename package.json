@@ -13,9 +13,9 @@
     "bcryptjs": "^3.0.3",
     "framer-motion": "^12.40.0",
     "jsonwebtoken": "^9.0.3",
-    "next": "16.2.7",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-toastify": "^11.1.0",
     "swr": "^2.4.1"
   },
@@ -23,10 +23,10 @@
     "@tailwindcss/postcss": "^4",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20.19.41",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.7",
+    "@types/react": "^18.3.30",
+    "@types/react-dom": "^18.3.7",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.15",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

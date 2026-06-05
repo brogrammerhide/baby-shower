@@ -7,9 +7,9 @@ interface PageTemplateProps {
   gridCols?: string;
 }
 
-export const PageTemplate: React.FC<PageTemplateProps> = ({ 
-  sidebar, 
-  content, 
+export const PageTemplate: React.FC<PageTemplateProps> = ({
+  sidebar,
+  content,
   maxWidth = 'max-w-[1040px]',
   gridCols = 'lg:grid-cols-[minmax(310px,.88fr)_minmax(0,1.12fr)]'
 }) => {

@@ -1,9 +1,9 @@
 import { Details, Gift } from '../../components/types';
 
 export const DEFAULT_DETAILS: Details = {
-  date: 'Sunday, July 13 from 12:00 to 16:00',
+  date: 'Sunday, June 29th from 12pm to 4pm',
   theme: 'Summer beach, seafoam blues, coral, and sunshine',
-  place: '570 Wilson Avenue, Toronto, ON',
+  place: '2737 Keele Street, Toronto, ON M3M2E9',
 };
 
 export const DEFAULT_GIFTS: Gift[] = [
