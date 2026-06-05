@@ -1,5 +1,5 @@
 import { connectToDatabase } from '../lib/db';
-import { Details } from '../health/entities/Details';
+import { Details } from '../entities/Details';
 
 const DEFAULT_DETAILS = {
   date: 'Sunday, July 13 from 12:00 to 16:00',

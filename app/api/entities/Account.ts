@@ -14,24 +14,24 @@ export interface IAccount extends Document {
 
 const AccountSchema = new Schema<IAccount>(
   {
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      unique: true,
-      trim: true,
-      lowercase: true,
-      match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address'],
-    },
-    passwordHash: {
-      type: String,
-      required: [true, 'Password hash is required'],
-      select: false, // Prevents leakage by default in query returns
-    },
-    role: {
-      type: String,
-      enum: ['admin', 'guest'],
-      default: 'guest',
-    },
+    // email: {
+    //   type: String,
+    //   required: [true, 'Email is required'],
+    //   unique: true,
+    //   trim: true,
+    //   lowercase: true,
+    //   match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address'],
+    // },
+    // passwordHash: {
+    //   type: String,
+    //   required: [true, 'Password hash is required'],
+    //   select: false, // Prevents leakage by default in query returns
+    // },
+    // role: {
+    //   type: String,
+    //   enum: ['admin', 'guest'],
+    //   default: 'guest',
+    // },
     firstName: {
       type: String,
       required: [true, 'First name is required'],
@@ -42,13 +42,13 @@ const AccountSchema = new Schema<IAccount>(
       required: [true, 'Last name is required'],
       trim: true,
     },
-    rsvpProfile: {
-      type: Schema.Types.ObjectId,
-      ref: 'RSVP',
-    },
-    lastLogin: {
-      type: Date,
-    },
+    // rsvpProfile: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'RSVP',
+    // },
+    // lastLogin: {
+    //   type: Date,
+    // },
   },
   {
     timestamps: true,

@@ -1,6 +1,6 @@
 import { connectToDatabase } from '../lib/db';
-import { Gift } from '../health/entities/Gift';
-import { RSVPModel } from '../health/entities/RSVP';
+import { Gift } from '../entities/Gift';
+import { RSVPModel } from '../entities/RSVP';
 import mongoose from 'mongoose';
 
 export async function getAllGifts(category?: string) {

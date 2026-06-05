@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Gift } from '../app/api/health/entities/Gift';
+import { Gift } from '../app/api/entities/Gift';
 import { connectToDatabase } from '../app/api/lib/db';
 
 interface GiftData {

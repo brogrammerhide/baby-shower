@@ -1,7 +1,7 @@
 import { connectToDatabase } from '../lib/db';
-import { RSVPModel } from '../health/entities/RSVP';
-import { Dietary } from '../health/entities/Dietary';
-import { Gift } from '../health/entities/Gift';
+import { RSVPModel } from '../entities/RSVP';
+import { Dietary } from '../entities/Dietary';
+import { Gift } from '../entities/Gift';
 
 export async function getAllRSVPs() {
   await connectToDatabase();

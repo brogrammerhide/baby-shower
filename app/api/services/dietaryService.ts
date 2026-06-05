@@ -1,5 +1,5 @@
 import { connectToDatabase } from '../lib/db';
-import { Dietary } from '../health/entities/Dietary';
+import { Dietary } from '../entities/Dietary';
 
 const DEFAULT_DIETARY_OPTIONS = [
   { key: 'vegetarian', label: 'Vegetarian', icon: '🌱' },

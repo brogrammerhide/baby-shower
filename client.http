@@ -1,0 +1,100 @@
+###
+# Baby Shower Signup - API Test Client
+# MongoDB-backed Next.js API endpoints
+###
+
+@baseUrl = http://localhost:3000/api
+
+###
+# ===== HEALTH CHECK =====
+###
+
+### Health check
+GET {{baseUrl}}/health
+
+###
+# ===== EVENT DETAILS =====
+###
+
+### Get event details (default or current)
+GET {{baseUrl}}/details
+
+### Update event details
+PUT {{baseUrl}}/details
+Content-Type: application/json
+
+{
+  "date": "Sunday, July 13 from 12:00 to 16:00",
+  "theme": "Summer beach, seafoam blues, coral, and sunshine",
+  "place": "570 Wilson Avenue, Toronto, ON"
+}
+
+###
+# ===== GIFTS (READ-ONLY) =====
+###
+
+### Get all gifts
+GET {{baseUrl}}/gifts
+
+### Get gifts by category
+GET {{baseUrl}}/gifts?category=gear
+
+###
+# ===== RSVP - SUBMIT & LOOKUP =====
+###
+
+### Get all RSVPs
+GET {{baseUrl}}/rsvp
+
+### Submit/Update RSVP
+### Required: firstName, lastName, attending (boolean)
+### Optional: guests (number), diet (array of dietary keys), otherDiet, arrivalTime
+POST {{baseUrl}}/rsvp
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "attending": true,
+  "guests": 2,
+  "diet": ["vegetarian", "dairy-free"],
+  "otherDiet": "no shellfish",
+  "arrivalTime": "12:00 PM"
+}
+
+### Lookup RSVP by first and last name
+### Required: firstName
+### Optional: lastName
+POST {{baseUrl}}/rsvp/lookup
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe"
+}
+
+### Lookup RSVP by first name only
+POST {{baseUrl}}/rsvp/lookup
+Content-Type: application/json
+
+{
+  "firstName": "Jane"
+}
+
+###
+# ===== DIETARY OPTIONS =====
+###
+
+### Get all dietary options (pre-seeded)
+GET {{baseUrl}}/dietary
+
+### Add new dietary option
+POST {{baseUrl}}/dietary
+Content-Type: application/json
+
+{
+  "key": "keto",
+  "label": "Keto",
+  "icon": "🥩"
+}
+
