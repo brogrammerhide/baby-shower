@@ -326,7 +326,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
           />
           {isAttending && (
             <FormField
-              label="Estimated arrival time (12:00 - 16:00, leave blank if unknown 😸)"
+              label="Estimated arrival (12:00 - 16:00, leave blank if unknown 😸)"
               id="estimateArrivalTime"
               type="time"
               min="12:00"

@@ -43,7 +43,7 @@ export const RegistryGrid: React.FC<RegistryGridProps> = ({ gifts, onToggleReser
         <p className="max-w-[420px] font-bold leading-normal text-[#315566]">Pick a gift, reserve it, and help us get ready for our beachy July baby.</p>
       </div>
 
-      <div className="mb-[18px] grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+      {/* <div className="mb-[18px] grid grid-cols-1 gap-2.5 sm:grid-cols-3">
         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.1 }} className="rounded-[18px] border border-ocean/15 bg-gradient-to-br from-white to-[#eaffff] p-[13px] text-center shadow-soft">
           <strong className="block text-[1.45rem] font-black leading-none text-coral">{gifts.length}</strong>
           <span className="mt-1.5 block text-xs font-extrabold uppercase tracking-[.04em] text-[#497184]">Gift ideas</span>
@@ -56,7 +56,7 @@ export const RegistryGrid: React.FC<RegistryGridProps> = ({ gifts, onToggleReser
           <strong className="block text-[1.45rem] font-black leading-none text-coral">July</strong>
           <span className="mt-1.5 block text-xs font-extrabold uppercase tracking-[.04em] text-[#497184]">Baby due</span>
         </motion.div>
-      </div>
+      </div> */}
 
       <div className="mb-4 grid items-center gap-2.5 sm:grid-cols-[minmax(0,1fr)_auto]">
         <Input 
