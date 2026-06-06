@@ -17,7 +17,7 @@ type RsvpData = {
 
 type RsvpRecord = RsvpData & { id: string };
 
-function normalizeNamePart(value: string) {
+export function normalizeNamePart(value: string) {
   return value
     .trim()
     .toLowerCase()
@@ -25,11 +25,11 @@ function normalizeNamePart(value: string) {
     .replace(/^-+|-+$/g, '');
 }
 
-function rsvpId(firstName: string, lastName: string) {
+export function rsvpId(firstName: string, lastName: string) {
   return `rsvp:${normalizeNamePart(firstName)}:${normalizeNamePart(lastName)}`;
 }
 
-function mapRsvpDoc(data: RsvpRecord) {
+export function mapRsvpDoc(data: RsvpRecord) {
   return {
     id: data.id,
     firstName: data.firstName || '',
@@ -45,7 +45,7 @@ function mapRsvpDoc(data: RsvpRecord) {
   };
 }
 
-async function fetchRsvpDocs() {
+export async function fetchRsvpDocs() {
   const keys = await redis.keys('rsvp:*');
   if (keys.length === 0) return [];
 
@@ -55,7 +55,7 @@ async function fetchRsvpDocs() {
     .filter((record): record is RsvpRecord => Boolean(record));
 }
 
-async function fetchRsvpDoc(id: string) {
+export async function fetchRsvpDoc(id: string) {
   const record = await redis.get<RsvpData>(id);
   return record ? { id, ...record } : null;
 }
@@ -174,7 +174,8 @@ export async function updateReservedGifts(id: string, reservedGifts: string[], g
     };
     const { id: _id, ...record } = nextData;
     await redis.set(id, record);
-    return mapRsvpDoc({ id, ...nextData });
+    nextData.id = id; // Ensure ID is included for mapping
+    return mapRsvpDoc(nextData);
   }
 
   return null;

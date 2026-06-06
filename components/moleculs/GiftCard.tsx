@@ -27,7 +27,7 @@ export const GiftCard: React.FC<GiftCardProps> = ({ gift, onToggle }) => {
               {gift.category}
             </span>
             
-            {gift.reservedCount > 0 && (
+            {gift.reservedCount && gift.reservedCount > 0 && (
               <div className="flex flex-shrink-0 items-center gap-1.5 rounded-lg bg-coral/10 px-2 py-0.5 animate-pop-in">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-coral" />
                 <span className="text-[10px] font-black text-coral">

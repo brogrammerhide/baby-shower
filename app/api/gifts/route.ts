@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { redis } from '../lib/upstashRedis';
-import { getAllRSVPs, fetchRsvpDoc } from '../services/rsvpService';
+import { fetchRsvpDoc, getAllRSVPs } from '../services/rsvpService';
 import { DEFAULT_GIFTS } from '../../../app/lib/defaults';
 
 export const dynamic = 'force-dynamic';
