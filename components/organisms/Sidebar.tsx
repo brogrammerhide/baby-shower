@@ -64,6 +64,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ details }) => {
             referrerPolicy="no-referrer-when-downgrade"
           />
         </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <InfoRow 
+            icon="parking" 
+            label="Parking" 
+            value="Free at Metro/Shoppers Plaza, Contact us for more details." 
+            title="Free parking at the plaza across the street. Paid parking is available around the condo."
+          />
+        </motion.div>
       </motion.div>
     </section>
   );
