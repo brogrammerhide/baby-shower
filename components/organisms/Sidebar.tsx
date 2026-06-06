@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 
 interface SidebarProps {
   details: Details;
+  onViewSchedule?: () => void;
 }
 
 const containerVariants = {
@@ -26,7 +27,7 @@ const itemVariants = {
   visible: { opacity: 1, x: 0 },
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ details }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ details, onViewSchedule }) => {
   const copyAddress = () => {
     navigator.clipboard.writeText(details.place);
     toast.success('Address copied to clipboard!');
@@ -69,8 +70,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ details }) => {
           <InfoRow 
             icon="parking" 
             label="Parking" 
-            value="Free at Metro/Shoppers Plaza, Contact us for more details." 
+            value="Free at Metro/Shoppers Plaza" 
             title="Free parking at the plaza across the street. Paid parking is available around the condo."
+          />
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <InfoRow 
+            icon="clock" 
+            label="Schedule" 
+            value="Celebration Itinerary" 
+            onClick={onViewSchedule}
+            hideCopyIcon={true}
+            title="Click to see what we have planned!"
           />
         </motion.div>
       </motion.div>

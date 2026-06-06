@@ -7,6 +7,7 @@ interface InfoRowProps {
   value: string;
   onClick?: () => void;
   title?: string;
+  hideCopyIcon?: boolean;
 }
 
 export const InfoRow: React.FC<InfoRowProps> = ({ 
@@ -14,7 +15,8 @@ export const InfoRow: React.FC<InfoRowProps> = ({
   label, 
   value, 
   onClick, 
-  title 
+  title,
+  hideCopyIcon
 }) => {
   return (
     <div 
@@ -29,7 +31,7 @@ export const InfoRow: React.FC<InfoRowProps> = ({
         <strong className="block text-[.85rem] font-extrabold uppercase tracking-[.04em] text-ocean">{label}</strong>
         <span className="block font-extrabold leading-snug">{value}</span>
       </div>
-      {onClick && (
+      {onClick && !hideCopyIcon && (
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/50 text-ocean/40 transition-colors group-hover:bg-white group-hover:text-ocean">
           <Icon name="copy" className="h-4 w-4 fill-none stroke-current stroke-2" />
         </span>

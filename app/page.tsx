@@ -11,13 +11,14 @@ import { Sidebar } from '../components/organisms/Sidebar';
 import { BabyAnimation } from '../components/organisms/BabyAnimation';
 import { RSVPForm } from '../components/organisms/RSVPForm';
 import { RegistryGrid } from '../components/organisms/RegistryGrid';
+import { ScheduleView } from '../components/organisms/ScheduleView';
 import { Icon } from '../components/atoms/Icon';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
   const [rsvpId, setRsvpId] = useState<string | null>(null);
-  const [view, setView] = useState<'rsvp' | 'registry'>('rsvp');
+  const [view, setView] = useState<'rsvp' | 'registry' | 'schedule'>('rsvp');
 
   useEffect(() => {
     // Try to load rsvpId from localStorage
@@ -89,7 +90,7 @@ export default function Home() {
       <PageTemplate
         sidebar={
           <div className="lg:sticky lg:top-0 grid gap-[22px]">
-            <Sidebar details={details} />
+            <Sidebar details={details} onViewSchedule={() => setView('schedule')} />
           </div>
         }
         content={
@@ -109,7 +110,7 @@ export default function Home() {
                   babyMode={babyMode}
                 />
               </motion.div>
-            ) : (
+            ) : view === 'registry' ? (
               <motion.div
                 key="registry-view"
                 initial={{ opacity: 0, x: 20 }}
@@ -123,14 +124,24 @@ export default function Home() {
                     onClick={() => setView('rsvp')}
                     className="flex items-center gap-1.5 text-sm font-bold text-ocean hover:underline"
                   >
-                    <Icon name="flower" className="h-4 w-4 fill-none stroke-current stroke-2" />
-                    Back to RSVP / My Info
+                    <Icon name="flower" className="h-4 w-4 fill-none stroke-current stroke-2 rotate-180" />
+                    Back to RSVP
                   </button>
                 </div>
                 <RegistryGrid
                   gifts={gifts}
                   onToggleReservation={toggleGiftReservation}
                 />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="schedule-view"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ScheduleView onBack={() => setView('rsvp')} />
               </motion.div>
             )}
           </AnimatePresence>
