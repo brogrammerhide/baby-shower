@@ -92,12 +92,18 @@ export async function submitRSVP(data: {
   diet: string[];
   otherDiet?: string;
   estimateArrivalTime?: string;
+  allowUpdate?: boolean;
 }) {
   const fn = data.firstName.trim();
   const ln = data.lastName.trim();
   const guests = data.attending ? Math.max(1, data.guests) : 0;
   const id = rsvpId(fn, ln);
   const existingDoc = await fetchRsvpDoc(id);
+
+  if (existingDoc && !data.allowUpdate) {
+    throw new Error('An RSVP already exists for this name. Please use "Find My RSVP" to update your existing response.');
+  }
+
   const existing = existingDoc;
   const now = new Date().toISOString();
 

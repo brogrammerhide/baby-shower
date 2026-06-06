@@ -1,19 +1,18 @@
 # GEMINI.md
 
 ## Overview
-**Baby Shower Registry** is a modern web application built with **Next.js 13 (App Router)** and **TypeScript**. It provides a full‑stack solution for managing a baby‑shower registry, RSVP handling, dietary restrictions, and gift reservations. The app uses **MongoDB** (via Mongoose) for data persistence, **Upstash Redis** for caching, and optionally integrates **Firebase** for auth (see `app/api/auth`).
+**Baby Shower Registry** is a modern, high-performance web application built with **Next.js 14 (App Router)** and **TypeScript**. It serves as a comprehensive platform for managing a baby shower event, featuring a gift registry with real-time reservation tracking, RSVP management with dietary requirements, and a vibrant "Summer Beach" aesthetic.
 
 ---
 
 ## Tech Stack
-- **Framework**: Next.js 13 (App Router) – server‑components, API routes, and dynamic rendering.
-- **Language**: TypeScript + React.
-- **Styling**: TailwindCSS (imported in `globals.css`) with a custom design system based on CSS variables for colors, fonts, and shadows.
-- **Database**: MongoDB (Docker Compose dev instance) accessed through Mongoose models (`Account`, `Group`, `RSVP`, `Gift`, `Dietary`).
-- **Cache**: Upstash Redis REST API for lightweight caching.
-- **Auth**: JWT‑based login endpoint (`/api/auth/login`).
-- **Deployment**: Netlify (badge in README) – can be deployed to any Node server.
-- **Design**: Uses custom SVG symbols, glass‑morphism style, and subtle micro‑animations defined in `globals.css`.
+- **Framework**: Next.js 14 (App Router) - Utilizing Server Components and Route Handlers.
+- **Language**: TypeScript.
+- **Styling**: TailwindCSS 4 (using the new `@theme` configuration) with custom design tokens.
+- **Database/Cache**: **Upstash Redis** - Used for persistent storage of RSVPs and gift reservation metadata.
+- **Animations**: Framer Motion for micro-interactions and background effects.
+- **Data Fetching**: SWR for client-side state management and optimistic UI updates.
+- **Notifications**: React Toastify for user feedback.
 
 ---
 
@@ -21,119 +20,83 @@
 ```
 baby-shower/
 ├─ app/                     # Next.js app router
-│   ├─ api/                # Backend endpoints
-│   │   ├─ gifts/          # CRUD for registry items
-│   │   ├─ rsvp/           # RSVP submit / lookup
-│   │   └─ services/       # Data‑access layers (Mongo, Redis)
-│   ├─ layout.tsx          # Root layout with Google fonts & SVG defs
-│   ├─ globals.css         # Tailwind + design tokens
-│   └─ page.tsx            # Home page wrapper
-├─ components/             # UI building blocks
-│   ├─ atoms/              # Buttons, inputs, icons
-│   ├─ molecules/          # Form components (RSVPForm, RegistryGrid)
-│   ├─ organisms/          # Page sections (Sidebar, BabyAnimation)
-│   └─ pages/              # Page templates (FilterButton, Modal)
-├─ public/                 # Static assets (favicon, images)
-├─ .env.local              # Development environment variables
-├─ .gitignore
-├─ README.md               # Project README (Netlify badge)
-├─ package.json            # Dependencies & scripts
-├─ plan.md                 # Detailed Mongoose schema plan (documentation)
-└─ types.ts                # Shared TypeScript interfaces
+│   ├─ api/                # Backend Route Handlers
+│   │   ├─ gifts/          # Gift listing and reservation [PATCH]
+│   │   ├─ rsvp/           # RSVP submission and lookup
+│   │   ├─ dietary/        # Static dietary options
+│   │   └─ services/       # Data-access layers (Upstash Redis)
+│   ├─ hooks/              # Custom React hooks (useFetch)
+│   ├─ lib/                # Shared utilities (apiMappers, defaults)
+│   ├─ layout.tsx          # Root layout with SVG icons & Toast provider
+│   ├─ globals.css         # Tailwind 4 theme & keyframe animations
+│   └─ page.tsx            # Main interactive landing page
+├─ components/             # Atomic Design UI components
+│   ├─ atoms/              # Base elements (Button, Input, Icon)
+│   ├─ moleculs/           # Composite elements (GiftCard, FormField)
+│   ├─ organisms/          # Complex sections (RSVPForm, RegistryGrid)
+│   └─ templates/          # Page layouts (BaseLayout)
+├─ public/                 # Static assets (baby.png, etc.)
+├─ .env.local              # Upstash Redis credentials
+├─ package.json            # Dependencies (Next 14, Tailwind 4, SWR)
+└─ GEMINI.md               # You are here
 ```
 
 ---
 
-## Core Data Model (see `plan.md`)
-- **Account** – admin / user authentication.
-- **Group** – invitation code grouping for families.
-- **RSVP** – guest attendance, dietary choices, reserved gift reference.
-- **Dietary** – configurable dietary options (key, label, optional icon).
-- **Gift** – registry items with reservation status.
+## Data Model (Redis Schema)
+The application uses Upstash Redis with specific key patterns:
+- `rsvp:<first-name>:<last-name>`: JSON hash storing guest attendance, dietary notes, and reserved gift IDs.
+- `gift:meta:<gift-id>`: Metadata hash storing gift name, category, and a `count` field for total reservations.
+- `gift:meta:*`: Used for gift discovery and listing.
 
 ---
 
 ## API Endpoints
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/gifts` | List all gifts (optional `?category=` filter). |
-| `POST`| `/api/gifts` | Create a new gift (admin). |
-| `PUT` | `/api/gifts/[id]` | Update a gift (admin). |
-| `PATCH`| `/api/gifts/[id]/reserve` | Reserve / release a gift for an RSVP. |
-| `DELETE`| `/api/gifts/[id]` | Delete a gift (admin). |
-| `GET` | `/api/rsvp` | List all RSVPs (admin). |
-| `POST`| `/api/rsvp` | Submit or update an RSVP. |
-| `POST`| `/api/rsvp/lookup` | Find RSVP by first/last name (public "Find My RSVP"). |
-| `DELETE`| `/api/rsvp/[id]` | Delete RSVP (admin). |
-| `GET` | `/api/details` | Get shower date, theme, location. |
-| `PUT` | `/api/details` | Update shower details (admin). |
-| `GET` | `/api/dietary` | List dietary options for the form. |
-| `POST`| `/api/dietary` | Add a new dietary option (admin). |
-| `POST`| `/api/auth/login` | Admin login – returns JWT cookie. |
-| `POST`| `/api/auth/logout` | Clears auth cookie. |
+| Method  | Path                      | Description                                      |
+|---------|---------------------------|--------------------------------------------------|
+| `GET`   | `/api/gifts`              | List all gifts with reservation status.          |
+| `PATCH` | `/api/gifts/[id]/reserve` | Reserve or release a gift for a specific RSVP.   |
+| `GET`   | `/api/rsvp`               | List all RSVPs (Admin view).                     |
+| `POST`  | `/api/rsvp`               | Submit or update an RSVP.                        |
+| `POST`  | `/api/rsvp/lookup`        | Find RSVP by name (Find My RSVP).                |
+| `GET`   | `/api/dietary`            | List available dietary options.                  |
+| `GET`   | `/api/health`             | Simple health check endpoint.                    |
 
 ---
 
-## UI Components Highlights
-- **SVG Symbol Library** – icons (wave, shell, sun, fish, etc.) defined in the root layout’s `<svg><defs>` for reuse across the app.
-- **Responsive Layout** – `RootLayout` applies Google fonts (`Nunito`, `Pacifico`) and CSS variables for a cohesive aesthetic.
-- **Micro‑Animations** – `@keyframes wave`, `float-up`, `pop-in` used for background “floater” elements and card entry.
-- **Form Components** – `RSVPForm` handles dynamic dietary checkboxes (`FormField` + `Input`).
-- **Registry Grid** – `RegistryGrid` displays gifts with reservation buttons that reflect `reserved` state.
+## Design System
+### Colors (Tailwind 4 @theme)
+- `ocean` (#0077b6): Primary brand color.
+- `coral` (#f4845f): Accent color for primary actions.
+- `sun` (#ffd166): Warm highlight color.
+- `seafoam`, `sky`, `sand`, `deep`: Secondary palette for the beach theme.
+
+### Typography
+- **Nunito**: Main body font for readability.
+- **Pacifico**: Decorative cursive font for headers and accents.
+
+### SVG Icon Library
+Defined as symbols in `layout.tsx` for high performance and easy reuse:
+`wave`, `shell`, `sun`, `fish`, `calendar`, `umbrella`, `pin`, `flower`, `party`, `watermelon`, `moon`, `palm`, `tent`, `bottle`, `bib`, `caddy`, `bath`, `star`, `shirt`, `cloth`, `firstaid`.
+
+---
+
+## Key Workflows
+1. **RSVP**: Guests search for their name or submit a new RSVP. Data is stored in Redis.
+2. **Registry**: Guests browse gifts. Reservations are tracked by gift ID and rsvp ID.
+3. **Optimistic Updates**: The UI uses SWR to immediately reflect gift reservations before the server confirms.
 
 ---
 
 ## Setup & Development
-1. **Clone the repo** (already on local path).
-2. **Install dependencies**:
-   ```bash
-   cd C:\Users\hideh\Desktop\baby-shower
-   npm ci   # installs exact lockfile versions
-   ```
-3. **Create a `.env.local`** (copy the example values). Ensure MongoDB is reachable – the repo includes a Docker‑Compose file:
-   ```bash
-   docker compose up -d
-   ```
-4. **Run the dev server**:
-   ```bash
-   npm run dev   # starts Next.js on http://localhost:3000
-   ```
-5. **Testing** – API routes can be hit with curl or Postman. Example RSVP submission:
-   ```bash
-   curl -X POST http://localhost:3000/api/rsvp \
-        -H "Content-Type: application/json" \
-        -d '{"firstName":"Jane","lastName":"Doe","attending":true,"guests":2,"diet":["vegetarian"],"estimateArrivalTime":"13:30"}'
-   ```
+1. **Environment**: Ensure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are in `.env.local`.
+2. **Install**: `npm install`
+3. **Dev**: `npm run dev`
+4. **Seed**: Gifts are automatically seeded from `app/lib/defaults.ts` if Redis is empty.
 
 ---
 
-## Design System (CSS Variables)
-| Variable | Value | Intent |
-|----------|-------|--------|
-| `--color-ocean` | `#0077b6` | Primary brand color (seafoam). |
-| `--color-sun`   | `#ffd166` | Accent for buttons & highlights. |
-| `--shadow-card` | Complex inset/outset shadow | Gives a subtle glass‑morphism card feel. |
-| `--animate-wave`| `wave 6s linear infinite` | Background icon “wave” animation. |
-| `--font-nunito` | `Nunito, sans-serif` | Body copy. |
-| `--font-pacifico`| `Pacifico, cursive` | Header & decorative text. |
-
----
-
-## Dev Notes & Gotchas
-- **Mongoose Model Hot‑Reload** – each schema file checks `mongoose.models.X || mongoose.model('X', schema)` to avoid `OverwriteModelError` during hot reload (see `plan.md`).
-- **Upstash Redis** – token and URL are stored in `.env.local`. The helper `upstashRedis.ts` provides a tiny wrapper for `GET/SET`.
-- **Tailwind Import** – `globals.css` imports Tailwind; make sure `tailwind.config.js` exists (generated by `npx tailwindcss init`).
-- **Static SVG Symbols** – they are defined once in the root layout; any component can reference them via `<svg><use href="#icon-wave"/></svg>`.
-- **Next.js Dynamic Routes** – RSVP lookup uses `[id]` and `lookup` sub‑folder; be aware of the required `export const dynamic = 'force-dynamic'` to disable caching for mutable data.
-
----
-
-## Future Enhancements
-- Add unit / integration tests (Jest + React Testing Library).
-- Implement email notifications on RSVP submission.
-- Expand the admin dashboard with role‑based UI.
-- Add image upload handling for custom gift images (e.g., via Cloudinary).
-
----
-
-*Generated by Antigravity*
+## Notes for Developers
+- **Tailwind 4**: Use the new `@theme` block in `globals.css`. Do not look for a `tailwind.config.js` as it's optional/deprecated in v4 for CSS-first config.
+- **Redis First**: MongoDB is present in `docker-compose.yml` but currently unused by the API. The source of truth is Upstash Redis.
+- **Anonymous Reservations**: Guests can reserve gifts before submitting an RSVP; these are tracked via an `anon:` prefixed ID in localStorage until "claimed" by an RSVP name.

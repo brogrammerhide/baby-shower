@@ -4,6 +4,8 @@ import { Details } from '../types';
 import { InfoRow } from '../moleculs/InfoRow';
 import { Icon } from '../atoms/Icon';
 
+import { toast } from 'react-toastify';
+
 interface SidebarProps {
   details: Details;
 }
@@ -27,7 +29,7 @@ const itemVariants = {
 export const Sidebar: React.FC<SidebarProps> = ({ details }) => {
   const copyAddress = () => {
     navigator.clipboard.writeText(details.place);
-    alert('Address copied to clipboard!');
+    toast.success('Address copied to clipboard!');
   };
 
   return (
@@ -50,6 +52,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ details }) => {
         <motion.div variants={itemVariants}><InfoRow icon="calendar" label="Date" value={details.date} /></motion.div>
         <motion.div variants={itemVariants}><InfoRow icon="umbrella" label="Theme" value={details.theme} /></motion.div>
         <motion.div variants={itemVariants}><InfoRow icon="pin" label="Place" value={details.place} onClick={copyAddress} title="Click to copy address" /></motion.div>
+        
+        <motion.div variants={itemVariants} className="overflow-hidden rounded-2xl border border-ocean/10 shadow-soft">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2883.2487615031764!2d-79.48081471505542!3d43.72615888149478!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x882b3182b9000001%3A0xb2150d3e77fbdf01!2s2737%20Keele%20St%2C%20North%20York%2C%20ON%20M3M%202E9!5e0!3m2!1sen!2sca!4v1780760402841!5m2!1sen!2sca"
+            width="100%"
+            height="180"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </motion.div>
       </motion.div>
     </section>
   );

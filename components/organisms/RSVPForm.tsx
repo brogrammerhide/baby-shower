@@ -10,6 +10,7 @@ import { Button } from '../atoms/Button';
 import { FormField } from '../moleculs/FormField';
 import { Modal } from '../moleculs/Modal';
 import { BabyAnimation } from './BabyAnimation';
+import { toast } from 'react-toastify';
 
 const FALLBACK_DIETARY: DietaryOption[] = [
   { key: 'vegetarian', label: 'Vegetarian' },
@@ -23,6 +24,7 @@ const FALLBACK_DIETARY: DietaryOption[] = [
 
 interface RSVPFormProps {
   onRsvpSuccess?: (rsvpId: string) => void;
+  onViewRegistry?: () => void;
   onBabyModeChange: (mode: 'happy' | 'sad') => void;
   babyMode: 'idle' | 'happy' | 'sad';
 }
@@ -40,7 +42,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeChange, babyMode }) => {
+export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onViewRegistry, onBabyModeChange, babyMode }) => {
   const { data: dietaryData } = useFetch('/api/dietary');
   const dietaryOptions = dietaryData ? toDietaryOptions(dietaryData) : FALLBACK_DIETARY;
 
@@ -51,6 +53,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
   const [lookupFirst, setLookupFirst] = useState('');
   const [lookupLast, setLookupLast] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -77,6 +80,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
       estimateArrivalTime: rsvp.estimateArrivalTime || '',
     });
     onBabyModeChange(rsvp.attending ? 'happy' : 'sad');
+    setIsEditing(true);
     if (rsvp.id) onRsvpSuccess?.(rsvp.id);
     setShowThankYou(false);
     setIsLookupModalOpen(false);
@@ -118,9 +122,21 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
             <p>Guests: {exact.guests}</p>
             <p>Diet: {exact.diet.join(', ') || 'None'}</p>
           </div>
-          <Button onClick={() => fillFormFromRsvp(exact)} className="mt-3 w-full !py-2 !font-pacifico text-sm">
-            Edit My RSVP
-          </Button>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <Button onClick={() => fillFormFromRsvp(exact)} className="!py-2 !font-pacifico text-xs">
+              Edit My RSVP
+            </Button>
+            <Button 
+              variant="seafoam" 
+              onClick={() => {
+                fillFormFromRsvp(exact);
+                onViewRegistry?.();
+              }} 
+              className="!py-2 !font-pacifico text-xs"
+            >
+              Check Gift Registry
+            </Button>
+          </div>
         </div>
       );
       return;
@@ -154,6 +170,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
         diet: formData.diet,
         otherDiet: formData.otherDiet || undefined,
         estimateArrivalTime: attending ? formData.estimateArrivalTime : undefined,
+        allowUpdate: isEditing,
       }),
     });
 
@@ -161,7 +178,7 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      alert((err as { error?: string }).error || 'Failed to submit RSVP.');
+      toast.error((err as { error?: string }).error || 'Failed to submit RSVP.');
       return;
     }
 
@@ -171,6 +188,8 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
 
     setThankYouAttending(attending);
     setShowThankYou(true);
+    setIsEditing(false);
+    setLookupResult('');
     onBabyModeChange(attending ? 'happy' : 'sad');
   };
 
@@ -190,9 +209,15 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
             ? 'Thanks so much for your RSVP. We cannot wait to celebrate this July baby boy with you.'
             : 'We are sorry you cannot make it. We hope to see you another time soon.'}
         </p>
-        {/* <button onClick={() => setShowThankYou(false)} className="mt-6 text-ocean font-bold underline cursor-pointer">
-          Send another RSVP
-        </button> */}
+        
+        <div className="mt-8 flex flex-col items-center gap-4">
+          <Button onClick={() => onViewRegistry?.()} className="w-full max-w-[280px] !font-pacifico">
+            Check Gift Registry
+          </Button>
+          <button onClick={() => setShowThankYou(false)} className="text-ocean font-bold text-sm underline cursor-pointer">
+            Edit my RSVP
+          </button>
+        </div>
       </motion.div>
     );
   }

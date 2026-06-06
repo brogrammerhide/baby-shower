@@ -52,6 +52,7 @@ export default function RootLayout({
             <symbol id="icon-shirt" viewBox="0 0 24 24"><path d="M8 5 4 8l3 4 1-1v10h8V11l1 1 3-4-4-3-2 2h-4L8 5Z"/></symbol>
             <symbol id="icon-cloth" viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M6 9h12M10 4v16M14 4v16"/></symbol>
             <symbol id="icon-firstaid" viewBox="0 0 24 24"><path d="M7 7V5h10v2h4v14H3V7h4Z"/><path d="M12 11v6M9 14h6"/></symbol>
+            <symbol id="icon-copy" viewBox="0 0 24 24"><rect width="13" height="13" x="9" y="9" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
           </defs>
         </svg>
         {children}

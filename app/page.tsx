@@ -13,23 +13,31 @@ import { RSVPForm } from '../components/organisms/RSVPForm';
 import { RegistryGrid } from '../components/organisms/RegistryGrid';
 import { Icon } from '../components/atoms/Icon';
 
+import { motion, AnimatePresence } from 'framer-motion';
+
 export default function Home() {
   const [rsvpId, setRsvpId] = useState<string | null>(null);
+  const [view, setView] = useState<'rsvp' | 'registry'>('rsvp');
 
   useEffect(() => {
     // Try to load rsvpId from localStorage
-    let saved = localStorage.getItem('rsvpId');
-    if (!saved) {
-      // Generate a persistent anonymous ID if none exists
-      saved = `rsvp:anon:${Math.random().toString(36).substring(2, 11)}`;
-      localStorage.setItem('rsvpId', saved);
+    const saved = localStorage.getItem('rsvpId');
+    if (saved) {
+      if (saved.includes(':anon:') || saved.startsWith('anon:')) {
+        // Clear anonymous IDs to force a proper RSVP for registry access
+        localStorage.removeItem('rsvpId');
+        localStorage.removeItem('myReservedGifts');
+      } else {
+        setRsvpId(saved);
+      }
     }
-    setRsvpId(saved);
   }, []);
 
   const handleRsvpSuccess = (id: string) => {
     setRsvpId(id);
     localStorage.setItem('rsvpId', id);
+    // After success, we stay in RSVP to show thank you, 
+    // but the thank you will have a button to go to registry.
   };
 
   const { data: giftsData, mutate: mutateGifts } = useFetch(rsvpId ? `/api/gifts?rsvpId=${encodeURIComponent(rsvpId)}` : null);
@@ -37,15 +45,7 @@ export default function Home() {
 
   const details = DEFAULT_DETAILS;
   
-  // Merge server data with local state for anonymous users
-  const gifts = (giftsData ? toGifts(giftsData) : DEFAULT_GIFTS).map(gift => {
-    const isAnon = rsvpId?.includes(':anon:') || rsvpId?.startsWith('anon:');
-    if (isAnon) {
-      const localReserved = JSON.parse(localStorage.getItem('myReservedGifts') || '[]');
-      return { ...gift, reserved: localReserved.includes(gift.id) };
-    }
-    return gift;
-  });
+  const gifts = (giftsData ? toGifts(giftsData) : DEFAULT_GIFTS);
 
   const toggleGiftReservation = async (index: number) => {
     const gift = gifts[index];
@@ -53,16 +53,6 @@ export default function Home() {
 
     const action = gift.reserved ? 'release' : 'reserve';
     
-    // Update local state for anonymous persistence
-    const isAnon = rsvpId.includes(':anon:') || rsvpId.startsWith('anon:');
-    if (isAnon) {
-      const localReserved = JSON.parse(localStorage.getItem('myReservedGifts') || '[]');
-      const nextReserved = action === 'reserve' 
-        ? [...localReserved, gift.id] 
-        : localReserved.filter((id: string) => id !== gift.id);
-      localStorage.setItem('myReservedGifts', JSON.stringify(nextReserved));
-    }
-
     // Optimistic Update (UI)
     const updatedGifts = [...gifts];
     updatedGifts[index] = {
@@ -71,7 +61,6 @@ export default function Home() {
       reservedCount: (gift.reservedCount || 0) + (gift.reserved ? -1 : 1)
     };
     
-    // We mutate the cache optimistically
     mutateGifts(updatedGifts, { revalidate: false });
 
     try {
@@ -88,11 +77,9 @@ export default function Home() {
 
       toast.success(action === 'reserve' ? `${gift.name} reserved!` : `${gift.name} released!`);
     } catch (error: any) {
-      alert(error.message);
-      // Rollback on error
+      toast.error(error.message);
       mutateGifts();
     } finally {
-      // Final revalidation to ensure sync with server
       await mutateGifts();
     }
   };
@@ -106,27 +93,47 @@ export default function Home() {
           </div>
         }
         content={
-          <>
-            <RSVPForm
-              onRsvpSuccess={handleRsvpSuccess}
-              onBabyModeChange={setBabyMode}
-              babyMode={babyMode}
-            />
-
-            <div className="relative my-9 flex items-center justify-center">
-              <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t-2 border-dashed border-[#b8e8f5]"></div>
-              </div>
-              <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-soft text-ocean border-2 border-[#b8e8f5]">
-                <Icon name="shell" className="h-[20px] w-[20px] fill-none stroke-current stroke-2" />
-              </div>
-            </div>
-
-            <RegistryGrid
-              gifts={gifts}
-              onToggleReservation={toggleGiftReservation}
-            />
-          </>
+          <AnimatePresence mode="wait">
+            {view === 'rsvp' ? (
+              <motion.div
+                key="rsvp-view"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <RSVPForm
+                  onRsvpSuccess={handleRsvpSuccess}
+                  onBabyModeChange={setBabyMode}
+                  onViewRegistry={() => setView('registry')}
+                  babyMode={babyMode}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="registry-view"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+              >
+                <div className="flex justify-end">
+                  <button 
+                    onClick={() => setView('rsvp')}
+                    className="flex items-center gap-1.5 text-sm font-bold text-ocean hover:underline"
+                  >
+                    <Icon name="flower" className="h-4 w-4 fill-none stroke-current stroke-2" />
+                    Back to RSVP / My Info
+                  </button>
+                </div>
+                <RegistryGrid
+                  gifts={gifts}
+                  onToggleReservation={toggleGiftReservation}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         }
       />
     </BaseLayout>

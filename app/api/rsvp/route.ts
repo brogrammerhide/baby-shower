@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
       diet: body.diet || [],
       otherDiet: body.otherDiet,
       estimateArrivalTime: body.estimateArrivalTime,
+      allowUpdate: Boolean(body.allowUpdate),
     });
 
     return NextResponse.json(rsvp, { status: 200 });

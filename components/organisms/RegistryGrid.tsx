@@ -78,6 +78,7 @@ export const RegistryGrid: React.FC<RegistryGridProps> = ({ gifts, onToggleReser
       </div>
 
       <motion.div 
+        layout
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -88,7 +89,7 @@ export const RegistryGrid: React.FC<RegistryGridProps> = ({ gifts, onToggleReser
             filteredGifts.map(({ gift, index }) => (
               <motion.div
                 layout
-                key={index}
+                key={gift.id || index}
                 variants={itemVariants}
                 initial="hidden"
                 animate="visible"
@@ -102,6 +103,7 @@ export const RegistryGrid: React.FC<RegistryGridProps> = ({ gifts, onToggleReser
             ))
           ) : (
             <motion.div 
+              layout
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="rounded-[18px] border-2 border-dashed border-[#b8e8f5] bg-white/70 p-6 text-center font-extrabold text-[#497184] sm:col-span-2"
