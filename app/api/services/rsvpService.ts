@@ -101,6 +101,10 @@ export async function submitRSVP(data: {
   const existing = existingDoc;
   const now = new Date().toISOString();
 
+  // Check if there's an anonymous profile with the same ID (this might happen if localStorage rsvpId matches an RSVP submission)
+  // But more likely, if the user submits an RSVP, we want to migrate their anonymous reservations if they used a temp ID.
+  // Actually, for simplicity, if they use the RSVP form, it generates a new ID based on their name.
+
   const rsvpData: RsvpData = {
     firstName: fn,
     lastName: ln,
@@ -143,18 +147,23 @@ export async function getRSVPsWithReservedGift(giftId: string) {
     .map(mapRsvpDoc);
 }
 
-export async function updateReservedGifts(id: string, reservedGifts: string[]) {
+export async function updateReservedGifts(id: string, reservedGifts: string[], giftIdToToggle: string, action: 'reserve' | 'release') {
+  // 1. Update the gift's internal count directly in its metadata hash
+  const delta = action === 'reserve' ? 1 : -1;
+  await redis.hincrby(`gift:meta:${giftIdToToggle}`, 'count', delta);
+
+  // 2. Only update the RSVP record if it's a "real" profile (not anonymous)
   const doc = await fetchRsvpDoc(id);
-  if (!doc) return null;
+  if (doc) {
+    const nextData = {
+      ...doc,
+      reservedGifts,
+      updatedAt: new Date().toISOString(),
+    };
+    const { id: _id, ...record } = nextData;
+    await redis.set(id, record);
+    return mapRsvpDoc({ id, ...nextData });
+  }
 
-  const nextData = {
-    ...doc,
-    reservedGifts,
-    updatedAt: new Date().toISOString(),
-  };
-  const { id: _id, ...record } = nextData;
-
-  await redis.set(id, record);
-
-  return mapRsvpDoc(nextData);
+  return null;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useFetch } from './hooks/useFetch';
 import { toGifts } from './lib/apiMappers';
@@ -15,36 +15,84 @@ import { Icon } from '../components/atoms/Icon';
 
 export default function Home() {
   const [rsvpId, setRsvpId] = useState<string | null>(null);
-  const { data: giftsData, mutate: mutateGifts } = useFetch(`/api/gifts${rsvpId ? `?rsvpId=${encodeURIComponent(rsvpId)}` : ''}`);
+
+  useEffect(() => {
+    // Try to load rsvpId from localStorage
+    let saved = localStorage.getItem('rsvpId');
+    if (!saved) {
+      // Generate a persistent anonymous ID if none exists
+      saved = `rsvp:anon:${Math.random().toString(36).substring(2, 11)}`;
+      localStorage.setItem('rsvpId', saved);
+    }
+    setRsvpId(saved);
+  }, []);
+
+  const handleRsvpSuccess = (id: string) => {
+    setRsvpId(id);
+    localStorage.setItem('rsvpId', id);
+  };
+
+  const { data: giftsData, mutate: mutateGifts } = useFetch(rsvpId ? `/api/gifts?rsvpId=${encodeURIComponent(rsvpId)}` : null);
   const [babyMode, setBabyMode] = useState<'idle' | 'happy' | 'sad'>('happy');
 
   const details = DEFAULT_DETAILS;
-  const gifts = giftsData ? toGifts(giftsData) : DEFAULT_GIFTS;
+  
+  // Merge server data with local state for anonymous users
+  const gifts = (giftsData ? toGifts(giftsData) : DEFAULT_GIFTS).map(gift => {
+    if (rsvpId?.startsWith('rsvp:anon:')) {
+      const localReserved = JSON.parse(localStorage.getItem('myReservedGifts') || '[]');
+      return { ...gift, reserved: localReserved.includes(gift.id) };
+    }
+    return gift;
+  });
 
   const toggleGiftReservation = async (index: number) => {
     const gift = gifts[index];
-    if (!gift?.id) return;
-
-    if (!rsvpId) {
-      alert('Please submit your RSVP before reserving a gift.');
-      return;
-    }
+    if (!gift?.id || !rsvpId) return;
 
     const action = gift.reserved ? 'release' : 'reserve';
-    const res = await fetch(`/api/gifts/${gift.id}/reserve`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ rsvpId, action }),
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      alert((err as { error?: string }).error || 'Could not update reservation.');
-      return;
+    
+    // Update local state for anonymous persistence
+    if (rsvpId.startsWith('rsvp:anon:')) {
+      const localReserved = JSON.parse(localStorage.getItem('myReservedGifts') || '[]');
+      const nextReserved = action === 'reserve' 
+        ? [...localReserved, gift.id] 
+        : localReserved.filter((id: string) => id !== gift.id);
+      localStorage.setItem('myReservedGifts', JSON.stringify(nextReserved));
     }
 
-    toast.success(action === 'reserve' ? `${gift.name} reserved!` : `${gift.name} released!`);
-    await mutateGifts();
+    // Optimistic Update (UI)
+    const updatedGifts = [...gifts];
+    updatedGifts[index] = {
+      ...gift,
+      reserved: !gift.reserved,
+      reservedCount: (gift.reservedCount || 0) + (gift.reserved ? -1 : 1)
+    };
+    
+    // We mutate the cache optimistically
+    mutateGifts(updatedGifts, { revalidate: false });
+
+    try {
+      const res = await fetch(`/api/gifts/${gift.id}/reserve`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rsvpId, action }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Could not update reservation.');
+      }
+
+      toast.success(action === 'reserve' ? `${gift.name} reserved!` : `${gift.name} released!`);
+    } catch (error: any) {
+      alert(error.message);
+      // Rollback on error
+      mutateGifts();
+    } finally {
+      // Final revalidation to ensure sync with server
+      await mutateGifts();
+    }
   };
 
   return (
@@ -58,7 +106,7 @@ export default function Home() {
         content={
           <>
             <RSVPForm
-              onRsvpSuccess={setRsvpId}
+              onRsvpSuccess={handleRsvpSuccess}
               onBabyModeChange={setBabyMode}
               babyMode={babyMode}
             />

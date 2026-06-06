@@ -112,12 +112,13 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ onRsvpSuccess, onBabyModeCha
       const exact = toRsvp(result.data);
       setLookupResult(
         <div className="space-y-1">
-          <p className="text-ocean">Found invitation for {exact.firstName} {exact.lastName}.</p>
-          <p>Attending: {exact.attending ? 'Yes' : 'No'}</p>
-          <p>Guests: {exact.guests}</p>
-          <p>Diet: {exact.diet.join(', ') || 'None'}</p>
-          {/* <p>Reserved gifts: {exact.reservedGifts?.join(', ') || 'None'}</p> */}
-          <Button onClick={() => fillFormFromRsvp(exact)} className="mt-2 w-full !py-1 !font-pacifico">
+          <p className="text-ocean font-bold">Found invitation for {exact.firstName} {exact.lastName}.</p>
+          <div className="text-xs space-y-0.5 text-deep/70">
+            <p>Attending: {exact.attending ? 'Yes' : 'No'}</p>
+            <p>Guests: {exact.guests}</p>
+            <p>Diet: {exact.diet.join(', ') || 'None'}</p>
+          </div>
+          <Button onClick={() => fillFormFromRsvp(exact)} className="mt-3 w-full !py-2 !font-pacifico text-sm">
             Edit My RSVP
           </Button>
         </div>

@@ -10,29 +10,40 @@ interface GiftCardProps {
 
 export const GiftCard: React.FC<GiftCardProps> = ({ gift, onToggle }) => {
   return (
-    <article className="group flex flex-col h-full rounded-[24px] border-2 border-[#b8e8f5] bg-white p-5 shadow-[0_8px_30px_rgb(0,119,182,0.06)] transition-all hover:shadow-[0_12px_40px_rgb(0,119,182,0.12)] hover:-translate-y-1">
-      <div className="flex items-center gap-4 mb-5">
-        <div className="relative">
-          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-sand to-[#fff8e8] shadow-soft transition-transform group-hover:scale-110">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-[28px] border-2 border-[#b8e8f5]/60 bg-white p-5 shadow-[0_8px_30px_rgb(0,119,182,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:border-ocean/20 hover:shadow-[0_20px_50px_rgb(0,119,182,0.1)]">
+      {/* Subtle Background Glow */}
+      <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-seafoam/20 blur-2xl transition-colors group-hover:bg-seafoam/40" />
+      
+      <div className="relative z-10 mb-5 flex items-start gap-4">
+        <div className="flex-shrink-0">
+          <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-sand to-[#fff8e8] shadow-soft transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
             <Icon name={gift.icon} className="h-8 w-8 fill-none stroke-ocean stroke-2" />
-          </span>
-          {gift.reservedCount && gift.reservedCount > 0 ? (
-            <div className="absolute -top-2 -right-2 bg-coral text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm animate-pop-in">
-              {gift.reservedCount} {gift.reservedCount === 1 ? 'RESERVED' : 'RESERVED'}
-            </div>
-          ) : null}
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <span className="inline-block text-[10px] font-black uppercase tracking-widest text-ocean/50 bg-seafoam/50 px-2 py-0.5 rounded-md mb-1">
-            {gift.category}
-          </span>
-          <h3 className="text-[1.1rem] font-extrabold leading-tight text-deep transition-colors group-hover:text-ocean">
+        
+        <div className="flex-1 min-w-0 pt-0.5">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <span className="truncate rounded-lg bg-seafoam/50 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.12em] text-ocean/60">
+              {gift.category}
+            </span>
+            
+            {gift.reservedCount > 0 && (
+              <div className="flex flex-shrink-0 items-center gap-1.5 rounded-lg bg-coral/10 px-2 py-0.5 animate-pop-in">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-coral" />
+                <span className="text-[10px] font-black text-coral">
+                  {gift.reservedCount} {gift.reservedCount === 1 ? 'PLANNING' : 'PLANNING'}
+                </span>
+              </div>
+            )}
+          </div>
+          
+          <h3 className="line-clamp-2 text-[1.05rem] font-extrabold leading-[1.25] text-deep transition-colors duration-300 group-hover:text-ocean">
             {gift.name}
           </h3>
         </div>
       </div>
 
-      <div className="mt-auto flex items-center gap-2">
+      <div className="relative z-10 mt-auto flex items-center gap-2 pt-4">
         {gift.url && (
           <a
             href={gift.url}
@@ -42,7 +53,7 @@ export const GiftCard: React.FC<GiftCardProps> = ({ gift, onToggle }) => {
           >
             <Button
               variant="transparent"
-              className="w-full !py-2.5 !bg-sun/15 !text-deep hover:!bg-sun/40 border-2 border-sun/30 text-[10px] font-black uppercase tracking-wider"
+              className="w-full !py-2.5 !bg-sun/10 !text-deep hover:!bg-sun/30 border-2 border-sun/20 text-[11px] font-black uppercase tracking-wider transition-all"
             >
               Shop Link
             </Button>
@@ -51,7 +62,7 @@ export const GiftCard: React.FC<GiftCardProps> = ({ gift, onToggle }) => {
         <Button 
           variant={gift.reserved ? 'mint' : 'coral'} 
           onClick={onToggle}
-          className={`py-2.5 whitespace-nowrap text-[10px] font-black uppercase tracking-wider ${gift.url ? 'flex-[1.2]' : 'w-full'}`}
+          className={`py-2.5 whitespace-nowrap text-[11px] font-black uppercase tracking-wider transition-all ${gift.url ? 'flex-[1.2]' : 'w-full'}`}
         >
           {gift.reserved ? 'Reserved' : 'Reserve'}
         </Button>

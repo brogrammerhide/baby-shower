@@ -26,20 +26,19 @@ export async function PATCH(
     }
 
     const rsvp = await getRSVPById(rsvpId);
-    if (!rsvp) {
-      return NextResponse.json({ error: 'RSVP profile not found' }, { status: 404 });
-    }
-
+    
     if (action === 'reserve') {
-      const existingReserved = rsvp.reservedGifts || [];
+      const existingReserved = rsvp?.reservedGifts || [];
       if (!existingReserved.includes(id)) {
-        await updateReservedGifts(rsvpId, [...existingReserved, id]);
+        await updateReservedGifts(rsvpId, [...existingReserved, id], id, 'reserve');
       }
     } else {
-      const existingReserved = rsvp.reservedGifts || [];
+      const existingReserved = rsvp?.reservedGifts || [];
       await updateReservedGifts(
         rsvpId,
-        existingReserved.filter((giftId: string) => giftId !== id)
+        existingReserved.filter((giftId: string) => giftId !== id),
+        id,
+        'release'
       );
     }
 
