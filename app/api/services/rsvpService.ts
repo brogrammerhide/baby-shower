@@ -150,7 +150,19 @@ export async function getRSVPsWithReservedGift(giftId: string) {
 export async function updateReservedGifts(id: string, reservedGifts: string[], giftIdToToggle: string, action: 'reserve' | 'release') {
   // 1. Update the gift's internal count directly in its metadata hash
   const delta = action === 'reserve' ? 1 : -1;
-  await redis.hincrby(`gift:meta:${giftIdToToggle}`, 'count', delta);
+  
+  // To avoid negative counts, we check current count if releasing
+  if (action === 'release') {
+    const currentCount = await redis.hget<number>(`gift:meta:${giftIdToToggle}`, 'count');
+    if (!currentCount || currentCount <= 0) {
+      // Already at 0 or below, don't decrement further
+      console.warn(`Attempted to release gift ${giftIdToToggle} but count is already ${currentCount}`);
+    } else {
+      await redis.hincrby(`gift:meta:${giftIdToToggle}`, 'count', delta);
+    }
+  } else {
+    await redis.hincrby(`gift:meta:${giftIdToToggle}`, 'count', delta);
+  }
 
   // 2. Only update the RSVP record if it's a "real" profile (not anonymous)
   const doc = await fetchRsvpDoc(id);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getRSVPById, getRSVPsWithReservedGift, updateReservedGifts } from '../../../services/rsvpService';
+import { getRSVPById, updateReservedGifts } from '../../../services/rsvpService';
 import { DEFAULT_GIFTS } from '../../../../../app/lib/defaults';
 
 export async function PATCH(
@@ -25,25 +25,39 @@ export async function PATCH(
       return NextResponse.json({ error: 'Gift not found in registry' }, { status: 404 });
     }
 
-    const rsvp = await getRSVPById(rsvpId);
+    // Check if anonymous
+    const isAnonymous = rsvpId.includes(':anon:') || rsvpId.startsWith('anon:');
     
-    if (action === 'reserve') {
-      const existingReserved = rsvp?.reservedGifts || [];
-      if (!existingReserved.includes(id)) {
-        await updateReservedGifts(rsvpId, [...existingReserved, id], id, 'reserve');
-      }
+    if (isAnonymous) {
+      // For anonymous users, we just update the gift count
+      // We can't easily check if they already reserved it on the server, 
+      // but the client-side handles optimistic state and double-click prevention.
+      await updateReservedGifts(rsvpId, [], id, action);
     } else {
-      const existingReserved = rsvp?.reservedGifts || [];
-      await updateReservedGifts(
-        rsvpId,
-        existingReserved.filter((giftId: string) => giftId !== id),
-        id,
-        'release'
-      );
+      const rsvp = await getRSVPById(rsvpId);
+      if (!rsvp) {
+         // If it's not anonymous but also not found, treat as error or fallback to anonymous-like behavior
+         await updateReservedGifts(rsvpId, [], id, action);
+      } else {
+        const existingReserved = rsvp.reservedGifts || [];
+        if (action === 'reserve') {
+          if (!existingReserved.includes(id)) {
+            await updateReservedGifts(rsvpId, [...existingReserved, id], id, 'reserve');
+          }
+        } else {
+          await updateReservedGifts(
+            rsvpId,
+            existingReserved.filter((giftId: string) => giftId !== id),
+            id,
+            'release'
+          );
+        }
+      }
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error: any) {
+    console.error('Reservation error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to update gift reservation' },
       { status: 500 }

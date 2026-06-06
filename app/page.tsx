@@ -39,7 +39,8 @@ export default function Home() {
   
   // Merge server data with local state for anonymous users
   const gifts = (giftsData ? toGifts(giftsData) : DEFAULT_GIFTS).map(gift => {
-    if (rsvpId?.startsWith('rsvp:anon:')) {
+    const isAnon = rsvpId?.includes(':anon:') || rsvpId?.startsWith('anon:');
+    if (isAnon) {
       const localReserved = JSON.parse(localStorage.getItem('myReservedGifts') || '[]');
       return { ...gift, reserved: localReserved.includes(gift.id) };
     }
@@ -53,7 +54,8 @@ export default function Home() {
     const action = gift.reserved ? 'release' : 'reserve';
     
     // Update local state for anonymous persistence
-    if (rsvpId.startsWith('rsvp:anon:')) {
+    const isAnon = rsvpId.includes(':anon:') || rsvpId.startsWith('anon:');
+    if (isAnon) {
       const localReserved = JSON.parse(localStorage.getItem('myReservedGifts') || '[]');
       const nextReserved = action === 'reserve' 
         ? [...localReserved, gift.id] 

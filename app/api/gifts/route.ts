@@ -26,7 +26,13 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get('category') || undefined;
     const rsvpId = searchParams.get('rsvpId') || undefined;
 
-    // 1. Discover all gifts via keys (safe at this scale)
+    // 1. Fetch RSVP doc once if not anonymous
+    let rsvpDoc: any = null;
+    if (rsvpId && !rsvpId.includes(':anon:') && !rsvpId.startsWith('anon:')) {
+      rsvpDoc = await fetchRsvpDoc(rsvpId);
+    }
+
+    // 2. Discover all gifts via keys (safe at this scale)
     let keys = await redis.keys('gift:meta:*');
     
     if (keys.length === 0) {
@@ -34,32 +40,31 @@ export async function GET(req: NextRequest) {
       keys = await redis.keys('gift:meta:*');
     }
 
-    // 2. Fetch all metadata and reservation status
-    const gifts = await Promise.all(
-      keys.map(async (key) => {
-        const id = key.replace('gift:meta:', '');
-        const meta = await redis.hgetall(key);
-        const m = meta as any;
-        
-        let isReserved = false;
-        if (rsvpId && !rsvpId.startsWith('rsvp:anon:')) {
-          const rsvp = await fetchRsvpDoc(rsvpId);
-          if (rsvp && rsvp.reservedGifts) {
-            isReserved = rsvp.reservedGifts.includes(id);
-          }
-        }
+    // 3. Fetch all metadata and reservation status
+    // Using a pipeline to fetch all hgetall in one roundtrip
+    const pipeline = redis.pipeline();
+    keys.forEach(key => pipeline.hgetall(key));
+    const results = await pipeline.exec();
 
-        return {
-          id,
-          name: m?.name || 'Unknown Gift',
-          url: m?.url || '',
-          category: m?.category || 'other',
-          icon: m?.icon || 'wave',
-          reserved: isReserved,
-          reservedCount: Number(m?.count || 0),
-        };
-      })
-    );
+    const gifts = keys.map((key, index) => {
+      const id = key.replace('gift:meta:', '');
+      const m = results[index] as any;
+      
+      let isReserved = false;
+      if (rsvpDoc && rsvpDoc.reservedGifts) {
+        isReserved = rsvpDoc.reservedGifts.includes(id);
+      }
+
+      return {
+        id,
+        name: m?.name || 'Unknown Gift',
+        url: m?.url || '',
+        category: m?.category || 'other',
+        icon: m?.icon || 'wave',
+        reserved: isReserved,
+        reservedCount: Number(m?.count || 0),
+      };
+    });
 
     let filteredGifts = gifts;
 
@@ -70,6 +75,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(filteredGifts, { status: 200 });
   } catch (error: unknown) {
+    console.error('Error fetching gifts:', error);
     const message = error instanceof Error ? error.message : 'Failed to fetch gifts';
     return NextResponse.json({ error: message }, { status: 500 });
   }
