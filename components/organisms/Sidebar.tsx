@@ -79,7 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ details, onViewSchedule }) => 
           <InfoRow 
             icon="clock" 
             label="Schedule" 
-            value="Celebration Itinerary" 
+            value="Check out our events!" 
             onClick={onViewSchedule}
             hideCopyIcon={true}
             title="Click to see what we have planned!"

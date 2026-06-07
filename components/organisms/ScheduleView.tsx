@@ -50,25 +50,25 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({ onBack }) => {
     {
       time: '1:00 PM',
       title: 'Arrival & Welcome 🍹',
-      description: 'Kick off the celebration with refreshing beach-themed drinks and tropical music! 🌴',
+      description: 'Grab a drink/snack and settle in for the day! 🌴',
       icon: 'sun',
     },
     {
       time: '1:30 PM',
       title: 'Lunch & "Don\'t Say Baby" 🤫',
-      description: 'Grab a bite and start the game! Try not to say the word "baby" until 3:00 PM. If you do, you lose your clip! 🥪',
+      description: 'Try not to say the word "baby" until 3:00 PM. If you do, you lose your clip! 🥪',
       icon: 'watermelon',
     },
     {
       time: '2:15 PM',
       title: 'Wood Block Decoration 🎨',
-      description: 'Grab a brush! We have wood blocks for everyone to decorate together for the nursery. 🖌️',
+      description: 'Grab a pen! We have wood blocks for everyone to decorate🖌️',
       icon: 'palm',
     },
     {
       time: '2:45 PM',
       title: 'Guessing Baby Food 🍼',
-      description: 'Put your senses to the test! Identify the mystery baby food flavors by tasting—or just smelling if you prefer! 👃 :)',
+      description: 'Identify the mystery baby food flavors by tasting—or just smelling if you prefer! 👃',
       icon: 'bottle',
     },
     {
@@ -80,7 +80,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({ onBack }) => {
     {
       time: '4:00 PM',
       title: 'Farewell 👋',
-      description: 'Hug the parents-to-be and grab a little "beach bag" favor on your way out! 🌊',
+      description: 'Goodbye and thank you for coming! 🌊',
       icon: 'star',
     },
   ];
