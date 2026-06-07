@@ -1,7 +1,7 @@
 import { Details, Gift } from '../../components/types';
 
 export const DEFAULT_DETAILS: Details = {
-  date: 'Sunday, June 29th from 12pm to 4pm',
+  date: 'Sunday, June 27th from 12pm to 4pm',
   theme: 'Summer beach, seafoam blues, coral, and sunshine',
   place: '2737 Keele Street, Toronto, ON M3M2E9',
 };

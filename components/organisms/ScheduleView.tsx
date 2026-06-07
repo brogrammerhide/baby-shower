@@ -73,8 +73,8 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({ onBack }) => {
     },
     {
       time: '3:30 PM',
-      title: 'Black Box Fish Ball 🐟',
-      description: 'Guess how many fish balls are in the black box for a chance to win a prize! 🎁',
+      title: 'Guessing how many fish are in the sea 🐟',
+      description: 'Guess how many gold fish are in the jar! 🎁',
       icon: 'fish',
     },
     {
