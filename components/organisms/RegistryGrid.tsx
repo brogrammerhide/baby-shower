@@ -40,7 +40,7 @@ export const RegistryGrid: React.FC<RegistryGridProps> = ({ gifts, onToggleReser
     <div>
       <div className="mb-[18px] grid items-start gap-[18px] sm:flex sm:items-end sm:justify-between">
         <h2 className="font-pacifico text-[clamp(1.65rem,5vw,2.3rem)] leading-tight text-ocean">Little Wave Registry</h2>
-        <p className="max-w-[420px] font-bold leading-normal text-[#315566]">Pick a gift, reserve it, and help us get ready for our beachy July baby.</p>
+        <p className="max-w-[420px] font-bold leading-normal text-[#315566]">Truly, your attendance is the best gift we could ask for! No pressure at all. We just put this list together as a cheat sheet for anyone looking for ideas, and to make sure we don't end up with three of the same noise machines.😂</p>
       </div>
 
       {/* <div className="mb-[18px] grid grid-cols-1 gap-2.5 sm:grid-cols-3">
